@@ -29,31 +29,30 @@ function parser(selector) {
 
       rgxType2 = rgxIds,
       rexType2 = new RegExp(rgxType2);
-      console.log(rexType0.toString());
-      console.log(rexType1.toString());
-      console.log(rexType2.toString());
 
   while (matched = rex.exec(selector)) {
-    console.log(matched[0].toString());
     if (rexType0.exec(matched[0].toString())) {
       var obj = {
         selector: matched[0].toString(),
         type: 0
       }
+      result.types[0].push(obj.selector);
     } else if (rexType1.exec(matched[0].toString())) {
       var obj = {
         selector: matched[0].toString(),
         type: 1
       }
+      result.types[1].push(obj.selector);
     } else if (rexType2.exec(matched[0].toString())) {
       var obj = {
         selector: matched[0].toString(),
         type: 2
       }
+      result.types[2].push(obj.selector);
     }
 
     result.segments.push(obj);
   }
-  console.log(result.segments);
+  console.log(result);
   return result;
 }
