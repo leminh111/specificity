@@ -53,6 +53,5 @@ function parser(selector) {
 
     result.segments.push(obj);
   }
-  console.log(result);
   return result;
 }
