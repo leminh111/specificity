@@ -1,3 +1,5 @@
+document.addEventListener("DOMContentLoaded", function(event) {
+parser('button.btn.btn-primary[data-select="link"] button#btn1:hover > span::first-letter#abc:hover::first-line');
 function parser(selector) {
   var result = {
     raw: selector,
@@ -9,19 +11,21 @@ function parser(selector) {
     segments: []
   };
 
+  // TODO append special character like > ~ \s
+  // pseudo class [^\:](\:[a-z0-9-_]+)
   var rgxClasses = '(\\.[a-z0-9-_]+)',
       rgxIds = '(#[a-z0-9-_]+)',
       rgxPseuClasses = '(\\:[a-z0-9-_]+)',
-      rgxEl = '(\\s[a-z0-9-_]+)',
-      rgxElBegin = '(^[a-z0-9-_]+)'
+      rgxEl = '([a-zA-Z0-9]+)',
       rgxPseuEl = '(\\:\\:[a-z0-9-_]+)',
       rgxAttr = '(\\[[^>:#.\\s]+\\])',
+      rgxNone = '(\\s+)|(>)|(~)',
 
-      rgxTotal = rgxClasses + '|' + rgxIds + '|' + rgxPseuClasses + '|' + rgxEl + '|' + rgxElBegin + '|' + rgxPseuEl + '|' + rgxAttr;
+      rgxTotal = rgxClasses + '|' + rgxIds + '|' + rgxPseuClasses + '|' + rgxEl + '|' + rgxPseuEl + '|' + rgxAttr + '|' + rgxNone;
 
   var rex = new RegExp(rgxTotal, 'g'),
 
-      rgxType0 = rgxEl + '|' + rgxElBegin + '|' + rgxPseuEl,
+      rgxType0 = rgxEl + '|' + rgxPseuEl,
       rexType0 = new RegExp(rgxType0);
 
       rgxType1 = rgxClasses + '|' + rgxAttr + '|' + rgxPseuClasses,
@@ -29,6 +33,9 @@ function parser(selector) {
 
       rgxType2 = rgxIds,
       rexType2 = new RegExp(rgxType2);
+
+      rgxTypeNone = rgxNone,
+      rexTypeNone = new RegExp(rgxTypeNone);
 
   while (matched = rex.exec(selector)) {
     if (rexType0.exec(matched[0].toString())) {
@@ -49,9 +56,28 @@ function parser(selector) {
         type: 2
       }
       result.types[2].push(obj.selector);
+    } else if (rexTypeNone.exec(matched[0].toString())) {
+      var obj = {
+        selector: matched[0].toString(),
+        type: 'none'
+      }
     }
 
     result.segments.push(obj);
   }
+
+  // Create a loop to append each selector to the text-field
+//  var textField = document.getElementsByClassName("text-field")[0];
+//
+//  for (var i=0; i<result.segments.length; i++) {
+//    var span = document.createElement("SPAN");
+//    span.className = 'type-' + result.segments[i].type;
+//    var selectorName = result.segments[i].selector;
+//    var t = document.createTextNode(selectorName);
+//    span.appendChild(t);
+//    textField.appendChild(span);
+//  }
+  console.log(result);
   return result;
 }
+});
