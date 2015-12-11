@@ -10,6 +10,7 @@ gulp.task('webserver', function() {
 });
 
 gulp.task('livereload', function() {
+  console.log('r');
     gulp.src('./src/theme/css/*.css').pipe(connect.reload());
     gulp.src('./src/index.html').pipe(connect.reload());
 });
