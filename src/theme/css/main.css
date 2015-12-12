@@ -8,7 +8,7 @@
   background-color: #fff;
   border-radius: 2px;
   box-shadow: 0 0 5px #888888;
-  font-family: Roboto;
+  font-family: 'Droid Sans Mono';
 }
 .content-box .text-field {
   padding: 2px;
@@ -71,4 +71,15 @@
 .type-2 {
   background-color: #D33682;
   color: #fff;
+}
+/* make whitespace in span show up */
+.type-none {
+  white-space: pre;
+  color: #fff;
+}
+/* add a whitespace before the type 0 whitespace span */
+span.whitespace:before {
+  content: ' ';
+  white-space: pre;
+  background-color: #002B36;
 }

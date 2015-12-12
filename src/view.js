@@ -1,6 +1,11 @@
 var SelectorSpan = React.createClass({
   render: function() {
-    var className = 'type-' + this.props.type;
+    var className;
+    if (this.props.whitespace) {
+      className = 'type-' + this.props.type + ' ' + this.props.whitespace;
+    } else {
+      className = 'type-' + this.props.type;
+    }
 
     return (
       <span className={className}>
@@ -21,7 +26,7 @@ var TextField = React.createClass({
   render: function() {
     var SelectorSpanNodes = this.props.data.segments.map(function(ss) {
       return (
-        <SelectorSpan type={ss.type}>
+        <SelectorSpan type={ss.type} whitespace={ss.whitespace ? ss.whitespace : null}>
           {ss.selector}
         </SelectorSpan>
       );
@@ -67,9 +72,9 @@ var ListBox = React.createClass({
 var SpecifictyTable = React.createClass({
     render: function() {
       this.data = {
-        raw: 'button.btn#btn1:hover',
+        raw: 'button.btn#btn1:hover img',
         types: {
-          0:['button'],
+          0:['button', 'img'],
           1:['.btn',':hover'],
           2:['#btn1']
         },
@@ -77,7 +82,8 @@ var SpecifictyTable = React.createClass({
           {selector: 'button',type:0},
           {selector: '.btn', type:1},
           {selector: '#btn1', type:2},
-          {selector:':hover', type:1}
+          {selector:':hover', type:1},
+          {selector:'img', type:0, whitespace: 'whitespace'}
         ]
       };
 

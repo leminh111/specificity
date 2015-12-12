@@ -1,5 +1,5 @@
-document.addEventListener("DOMContentLoaded", function(event) {
-parser('button.btn.btn-primary[data-select="link"] button#btn1:hover > span::first-letter#abc:hover::first-line');
+//document.addEventListener("DOMContentLoaded", function(event) {
+//parser('button .btn.btn-primary[data-select="link"] button#btn1:hover > span::first-letter#abc:hover::first-line');
 function parser(selector) {
   var result = {
     raw: selector,
@@ -11,19 +11,24 @@ function parser(selector) {
     segments: []
   };
 
-  // TODO append special character like > ~ \s
-  // pseudo class [^\:](\:[a-z0-9-_]+)
   var rgxClasses = '(\\.[a-z0-9-_]+)',
       rgxIds = '(#[a-z0-9-_]+)',
       rgxPseuClasses = '(\\:[a-z0-9-_]+)',
-      rgxEl = '([a-zA-Z0-9]+)',
+      rgxEl = '(^[a-z]+)',
       rgxPseuEl = '(\\:\\:[a-z0-9-_]+)',
       rgxAttr = '(\\[[^>:#.\\s]+\\])',
       rgxNone = '(\\s+)|(>)|(~)',
+      // Create a rgx for the ElSpace 
+      // otherwise the rgxNone would take the space away
+      // and rgxEl cannot detect the El anymore
+      rgxElSpace = '(\\s[a-z]+)',
 
-      rgxTotal = rgxClasses + '|' + rgxIds + '|' + rgxPseuClasses + '|' + rgxEl + '|' + rgxPseuEl + '|' + rgxAttr + '|' + rgxNone;
+      rgxTotal = rgxElSpace + '|' + rgxClasses + '|' + rgxIds + '|' + rgxPseuClasses + '|' + rgxEl + '|' + rgxPseuEl + '|' + rgxAttr + '|' + rgxNone;
 
   var rex = new RegExp(rgxTotal, 'g'),
+
+      rgxType0space = rgxElSpace,
+      rexType0space = new RegExp(rgxType0space);
 
       rgxType0 = rgxEl + '|' + rgxPseuEl,
       rexType0 = new RegExp(rgxType0);
@@ -38,7 +43,16 @@ function parser(selector) {
       rexTypeNone = new RegExp(rgxTypeNone);
 
   while (matched = rex.exec(selector)) {
-    if (rexType0.exec(matched[0].toString())) {
+    // Check if the span is of type 0 with whitespace
+    if (rexType0space.exec(matched[0].toString())) {
+      var obj = {
+        selector: matched[0].toString(),
+        type: 0,
+        // Add prop whitespace for the conditional statement
+        whitespace: 'whitespace'
+      }
+      result.types[0].push(obj.selector);
+    } else if (rexType0.exec(matched[0].toString())) {
       var obj = {
         selector: matched[0].toString(),
         type: 0
@@ -71,8 +85,15 @@ function parser(selector) {
 //
 //  for (var i=0; i<result.segments.length; i++) {
 //    var span = document.createElement("SPAN");
-//    span.className = 'type-' + result.segments[i].type;
-//    var selectorName = result.segments[i].selector;
+//    // If span is type 0 with whitespace
+//    if (result.segments[i].whitespace) {
+//      // Add a seperate class for the span
+//      span.className = 'type-' + result.segments[i].type + ' ' + result.segments[i].whitespace;
+//      var selectorName = result.segments[i].selector.trim();
+//    } else {
+//      span.className = 'type-' + result.segments[i].type;
+//      var selectorName = result.segments[i].selector;
+//    }
 //    var t = document.createTextNode(selectorName);
 //    span.appendChild(t);
 //    textField.appendChild(span);
@@ -80,4 +101,4 @@ function parser(selector) {
   console.log(result);
   return result;
 }
-});
+//});
