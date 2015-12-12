@@ -14,21 +14,14 @@ function parser(selector) {
   var rgxClasses = '(\\.[a-z0-9-_]+)',
       rgxIds = '(#[a-z0-9-_]+)',
       rgxPseuClasses = '(\\:[a-z0-9-_]+)',
-      rgxEl = '(^[a-z]+)',
+      rgxEl = '(^[a-z]+)|((\\s)([a-z])+)',
       rgxPseuEl = '(\\:\\:[a-z0-9-_]+)',
       rgxAttr = '(\\[[^>:#.\\s]+\\])',
       rgxNone = '(\\s+)|(>)|(~)',
-      // Create a rgx for the ElSpace 
-      // otherwise the rgxNone would take the space away
-      // and rgxEl cannot detect the El anymore
-      rgxElSpace = '(\\s[a-z]+)',
 
-      rgxTotal = rgxElSpace + '|' + rgxClasses + '|' + rgxIds + '|' + rgxPseuClasses + '|' + rgxEl + '|' + rgxPseuEl + '|' + rgxAttr + '|' + rgxNone;
+      rgxTotal = rgxClasses + '|' + rgxIds + '|' + rgxPseuClasses + '|' + rgxEl + '|' + rgxPseuEl + '|' + rgxAttr + '|' + rgxNone;
 
   var rex = new RegExp(rgxTotal, 'g'),
-
-      rgxType0space = rgxElSpace,
-      rexType0space = new RegExp(rgxType0space);
 
       rgxType0 = rgxEl + '|' + rgxPseuEl,
       rexType0 = new RegExp(rgxType0);
@@ -43,16 +36,18 @@ function parser(selector) {
       rexTypeNone = new RegExp(rgxTypeNone);
 
   while (matched = rex.exec(selector)) {
-    // Check if the span is of type 0 with whitespace
-    if (rexType0space.exec(matched[0].toString())) {
-      var obj = {
-        selector: matched[0].toString(),
-        type: 0,
-        // Add prop whitespace for the conditional statement
-        whitespace: 'whitespace'
+
+    if (rexType0.exec(matched[0].toString())) {
+      // Check if this is the El with space at the beginning
+      // then add the space to the type none and push to the segment
+      if (matched[6]){
+        var objSpace = {
+          selector: matched[6].toString(),
+          type: 'none'
+        }
+        result.segments.push(objSpace);
       }
-      result.types[0].push(obj.selector);
-    } else if (rexType0.exec(matched[0].toString())) {
+
       var obj = {
         selector: matched[0].toString(),
         type: 0
@@ -85,20 +80,12 @@ function parser(selector) {
 //
 //  for (var i=0; i<result.segments.length; i++) {
 //    var span = document.createElement("SPAN");
-//    // If span is type 0 with whitespace
-//    if (result.segments[i].whitespace) {
-//      // Add a seperate class for the span
-//      span.className = 'type-' + result.segments[i].type + ' ' + result.segments[i].whitespace;
-//      var selectorName = result.segments[i].selector.trim();
-//    } else {
-//      span.className = 'type-' + result.segments[i].type;
-//      var selectorName = result.segments[i].selector;
-//    }
+//    span.className = 'type-' + result.segments[i].type;
+//    var selectorName = result.segments[i].selector;
 //    var t = document.createTextNode(selectorName);
 //    span.appendChild(t);
 //    textField.appendChild(span);
 //  }
-  console.log(result);
   return result;
 }
 //});

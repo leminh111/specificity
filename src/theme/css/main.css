@@ -77,9 +77,3 @@
   white-space: pre;
   color: #fff;
 }
-/* add a whitespace before the type 0 whitespace span */
-span.whitespace:before {
-  content: ' ';
-  white-space: pre;
-  background-color: #002B36;
-}
