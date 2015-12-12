@@ -9,9 +9,9 @@ function parser(selector) {
     segments: []
   };
 
-  while (matched = rgx(selector)) {
+  while (matched = rex.exec(selector)) {
     var matchedSelector = matched[0].toString();
-    if (rgxType0(matchedSelector)) {
+    if (rexType0.exec(matchedSelector)) {
       // Check if this is the El with space at the beginning
       // then add the space to the type none and push to the segment
       if (matched[6]){
@@ -21,13 +21,13 @@ function parser(selector) {
 
       var obj = createSegment(matchedSelector, 0);
       result.types[0].push(obj.selector);
-    } else if (rgxType1(matchedSelector)) {
+    } else if (rexType1.exec(matchedSelector)) {
       var obj = createSegment(matchedSelector, 1);
       result.types[1].push(obj.selector);
-    } else if (rgxType2(matchedSelector)) {
+    } else if (rexType2.exec(matchedSelector)) {
       var obj = createSegment(matchedSelector, 2);
       result.types[2].push(obj.selector);
-    } else if (rgxTypeNone(matchedSelector)) {
+    } else if (rexTypeNone.exec(matchedSelector)) {
       var obj = createSegment(matchedSelector, 'none');
     }
 
@@ -46,14 +46,6 @@ function createSegment(selector, type) {
   return obj;
 }
 
-function createRegex(rgx) {
-  var regexType = new RegExp(rgx);
-  function regex(selector) {
-    return regexType.exec(selector);
-  }
-  return regex;
-}
-
 var rgxClasses = '(\\.[a-z0-9-_]+)',
     rgxIds = '(#[a-z0-9-_]+)',
     rgxPseuClasses = '(\\:[a-z0-9-_]+)',
@@ -64,10 +56,18 @@ var rgxClasses = '(\\.[a-z0-9-_]+)',
 
     rgxTotal = rgxClasses + '|' + rgxIds + '|' + rgxPseuClasses + '|' + rgxEl + '|' + rgxPseuEl + '|' + rgxAttr + '|' + rgxNone;
 
-var rgx = createRegex(rgxTotal),
-    rgxType0 = createRegex(rgxEl+'|'+rgxPseuEl),
-    rgxType1 = createRegex(rgxClasses+'|'+rgxAttr+'|'+rgxPseuClasses),
-    rgxType2 = createRegex(rgxIds),
-    rgxTypeNone = createRegex(rgxNone);
+var rex = new RegExp(rgxTotal, 'g'),
+
+    rgxType0 = rgxEl + '|' + rgxPseuEl,
+    rexType0 = new RegExp(rgxType0),
+
+    rgxType1 = rgxClasses + '|' + rgxAttr + '|' + rgxPseuClasses,
+    rexType1 = new RegExp(rgxType1),
+
+    rgxType2 = rgxIds,
+    rexType2 = new RegExp(rgxType2),
+
+    rgxTypeNone = rgxNone,
+    rexTypeNone = new RegExp(rgxTypeNone);
 
 parser('button .btn.btn-primary[data-select="link"] button#btn1:hover > span::first-letter#abc:hover::first-line');
