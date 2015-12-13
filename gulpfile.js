@@ -7,7 +7,7 @@ var gulp = require('gulp'),
 
 gulp.task('browserify', function() {
   var b = browserify({
-    entries: './src/view.js',
+    entries: './src/scripts/view.js',
     debug: true,
     transform: [
       ["babelify", {presets: ['react']}]
@@ -40,7 +40,7 @@ gulp.task('less', function() {
 
 gulp.task('watch', function() {
     gulp.watch('./src/theme/less/*.less', ['less']);
-    gulp.watch('./src/index.js', ['browserify']);
+    gulp.watch('./src/scripts/*.js', ['browserify']);
     gulp.watch(['./src/theme/css/*.css','./src/main.js', './src/index.html'], ['livereload']);
 });
 
