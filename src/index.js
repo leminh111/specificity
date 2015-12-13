@@ -66,7 +66,6 @@ module.exports = function parser(selector) {
     return obj;
   }
 
-  console.log(result);
   return result;
 }
 
