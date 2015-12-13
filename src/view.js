@@ -1,3 +1,7 @@
+var React = require('react');
+var ReactDOM = require('react-dom');
+var parser = require('./index.js');
+
 var SelectorSpan = React.createClass({
   render: function() {
     var className;
@@ -67,22 +71,7 @@ var ListBox = React.createClass({
 
 var SpecifictyTable = React.createClass({
     render: function() {
-      this.data = {
-        raw: 'button.btn#btn1:hover img',
-        types: {
-          0:['button', 'img'],
-          1:['.btn',':hover'],
-          2:['#btn1']
-        },
-        segments:[
-          {selector: 'button',type:0},
-          {selector: '.btn', type:1},
-          {selector: '#btn1', type:2},
-          {selector:':hover', type:1},
-          {selector:' ', type:'none'},
-          {selector:' img', type:0}
-        ]
-      };
+      this.data = parser('button .btn.btn-primary[data-select="link"] button#btn1:hover > span::first-letter#abc:hover::first-line');
 
       return (
         <div className="content-box">
@@ -101,3 +90,4 @@ ReactDOM.render(
   </div>,
     document.getElementById('container')
 );
+

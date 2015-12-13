@@ -1,4 +1,4 @@
-function parser(selector) {
+module.exports = function parser(selector) {
   var result = {
     raw: selector,
     types: {
@@ -8,6 +8,30 @@ function parser(selector) {
     },
     segments: []
   };
+
+  var rgxClasses = '(\\.[a-z0-9-_]+)',
+      rgxIds = '(#[a-z0-9-_]+)',
+      rgxPseuClasses = '(\\:[a-z0-9-_]+)',
+      rgxEl = '(^[a-z]+)|((\\s)([a-z])+)',
+      rgxPseuEl = '(\\:\\:[a-z0-9-_]+)',
+      rgxAttr = '(\\[[^>:#.\\s]+\\])',
+      rgxNone = '(\\s+)|(>)|(~)',
+
+      rgxTotal = rgxClasses + '|' + rgxIds + '|' + rgxPseuClasses + '|' + rgxEl + '|' + rgxPseuEl + '|' + rgxAttr + '|' + rgxNone;
+
+  var rex = new RegExp(rgxTotal, 'g'),
+
+      rgxType0 = rgxEl + '|' + rgxPseuEl,
+      rexType0 = new RegExp(rgxType0),
+
+      rgxType1 = rgxClasses + '|' + rgxAttr + '|' + rgxPseuClasses,
+      rexType1 = new RegExp(rgxType1),
+
+      rgxType2 = rgxIds,
+      rexType2 = new RegExp(rgxType2),
+
+      rgxTypeNone = rgxNone,
+      rexTypeNone = new RegExp(rgxTypeNone);
 
   while (matched = rex.exec(selector)) {
     var matchedSelector = matched[0].toString();
@@ -34,40 +58,15 @@ function parser(selector) {
     result.segments.push(obj);
   }
 
+  function createSegment(selector, type) {
+    var obj = {
+      selector: selector,
+      type: type
+    }
+    return obj;
+  }
+
   console.log(result);
   return result;
 }
 
-function createSegment(selector, type) {
-  var obj = {
-    selector: selector,
-    type: type
-  }
-  return obj;
-}
-
-var rgxClasses = '(\\.[a-z0-9-_]+)',
-    rgxIds = '(#[a-z0-9-_]+)',
-    rgxPseuClasses = '(\\:[a-z0-9-_]+)',
-    rgxEl = '(^[a-z]+)|((\\s)([a-z])+)',
-    rgxPseuEl = '(\\:\\:[a-z0-9-_]+)',
-    rgxAttr = '(\\[[^>:#.\\s]+\\])',
-    rgxNone = '(\\s+)|(>)|(~)',
-
-    rgxTotal = rgxClasses + '|' + rgxIds + '|' + rgxPseuClasses + '|' + rgxEl + '|' + rgxPseuEl + '|' + rgxAttr + '|' + rgxNone;
-
-var rex = new RegExp(rgxTotal, 'g'),
-
-    rgxType0 = rgxEl + '|' + rgxPseuEl,
-    rexType0 = new RegExp(rgxType0),
-
-    rgxType1 = rgxClasses + '|' + rgxAttr + '|' + rgxPseuClasses,
-    rexType1 = new RegExp(rgxType1),
-
-    rgxType2 = rgxIds,
-    rexType2 = new RegExp(rgxType2),
-
-    rgxTypeNone = rgxNone,
-    rexTypeNone = new RegExp(rgxTypeNone);
-
-parser('button .btn.btn-primary[data-select="link"] button#btn1:hover > span::first-letter#abc:hover::first-line');
