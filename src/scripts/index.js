@@ -15,7 +15,7 @@ module.exports = function parser(selector) {
       rgxEl = '(^[a-z]+)|((\\s)([a-z])+)',
       rgxPseuEl = '(\\:\\:[a-z0-9-_]+)',
       rgxAttr = '(\\[[^>:#.\\s]+\\])',
-      rgxNone = '(\\s+)|(>)|(~)|(\\:)|(#)|(\\.)',
+      rgxNone = '(\\s+)|(>)|(~)|(\\:)|(#)|(\\.)|(.+\\])|(\\[.+(?!\\]))',
 
       rgxTotal = rgxClasses + '|' + rgxIds + '|' + rgxPseuClasses + '|' + rgxEl + '|' + rgxPseuEl + '|' + rgxAttr + '|' + rgxNone;
 
