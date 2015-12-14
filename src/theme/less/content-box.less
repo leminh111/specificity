@@ -1,5 +1,34 @@
+@-webkit-keyframes fadeIn {
+  0% {
+    opacity: 0;
+    -webkit-transform: scale(0);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.active {
+  -webkit-animation: fadeIn 0.5s;
+  animation: fadeIn 0.5s;
+}
+
 .content-box {
-  padding: 20px 20px 5px;
+  position: relative;
+  margin-top: 20px;
+  padding: 20px;
   background-color: @white;
   border-radius: 2px;
   box-shadow: 0 0 5px #888888;
@@ -16,7 +45,11 @@
     }
 
     .event-capture {
-      display: none;
+      display: block;
+      position: absolute;
+      width: 100%;
+      border: 0;
+      resize: none;
     }
 
     span {
@@ -31,43 +64,82 @@
     width: 100%;
     margin-top: 20px;
 
-    .box {
-      position: relative;
+    .table-cell {
       display: table-cell;
       width: 1%;
       border-left: 5px solid @white;
-      border-radius: 5px;
 
+      .box {
+        position: relative;
+        border-radius: 5px;
+
+
+        &:before {
+          display: block;
+          content: "";
+          padding-top: 100%;
+        }
+
+        .inner {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          text-align: center;
+
+          .number {
+            width: 100%;
+            display: block;
+            font-size: 80px;
+            font-weight: bold;
+          }
+
+          .description {
+          }
+        }
+      }
       &:first-child {
         border-left: 0;
       }
+    }
+  }
 
-      &:before {
-        display: block;
-        content: "";
-        padding-top: 100%;
-      }
+  .extras {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    width: 100%;
 
-      .inner {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        text-align: center;
+    .extra-left {
+      float: left;
+    }
 
-        .number {
-          width: 100%;
-          display: block;
-          font-size: 80px;
-          font-weight: bold;
-        }
+    .extra-right {
+      float: right;
+    }
+  }
 
-        .description {
-        }
-      }
+  .extra-left, .extra-right {
+    transition: all 0.3s ease;
+  }
+
+  &:hover {
+    .extras {
+      opacity: 1;
+    }
+
+    .extra-left {
+      margin-left: -@icon-size;
+    }
+
+    .extra-right {
+      margin-right: -@icon-size;
     }
   }
 }
+
 
 .type-0 {
   background-color: @green;
@@ -83,3 +155,5 @@
   background-color: @pink;
   color: @white;
 }
+
+

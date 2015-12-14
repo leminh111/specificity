@@ -1,0 +1,187 @@
+// Global Value
+@unit: @icon-size / 10;
+
+.icon {
+  position: relative;
+  width: @icon-size;
+  height: @icon-size;
+  background-color: transparent;
+}
+
+.icon-copy {
+  // Copy Value
+  @width: @unit * 5;
+  @height: @unit * 7.5;
+  @corner: @unit * 2;
+  @offset: @unit / 2 + @unit / 4;
+
+  .paper {
+    transform: translate3d(-50%, -50%, -0);
+    width: @width;
+    height: @height;
+  }
+
+  .top-left {
+    float: left;
+    width: @width - @corner;
+    height: @corner;
+    border: @unit / 2 solid black;
+    border-bottom: none;
+    border-right: none;
+    box-sizing: border-box;
+    background-color: white;
+  }
+
+  .top-right {
+    float: left;
+    width: 0px;
+    height: 0px;
+    border-right: @corner solid transparent;
+    border-bottom: @corner solid black;
+  }
+
+  .bottom {
+    position: relative;
+    width: @width;
+    height: @height - @corner;
+    border: @unit / 2 solid black;
+    border-top: none;
+    clear: left;
+    padding: @unit / 2;
+    box-sizing: border-box;
+    background-color: white;
+
+    .lines {
+      .line {
+        margin-top: @unit / 2;
+        border-top: @unit / 3 solid black;
+
+        &:first-child {
+          margin-top: 0;
+        }
+      }
+
+      .line-normal {
+        width: 100%;
+      }
+
+      .line-short {
+        width: 80%;
+      }
+    }
+  }
+
+  // Position the papers
+  .paper-first, .paper-second {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0.3s ease;
+  }
+
+  .paper-first {
+    z-index: 1;
+  }
+  .paper-second {
+    z-index: 0;
+  }
+
+  &:hover {
+    .paper-first {
+      margin-top: @offset;
+      margin-left: -@offset;
+    }
+
+    .paper-second {
+      margin-top: -@offset;
+      margin-left: @offset;
+    }
+  }
+}
+
+.icon-trash {
+  // Trash Value
+  @width: @unit * 7.5;
+  @height: @unit * 10;
+  @border: @width / 11;
+
+  position: relative;
+
+  .trash-body {
+    width: 50%;
+    margin: 0 auto;
+    width: @width;
+    height: @height;
+
+    .lid {
+      position: absolute;
+      top: @border * 2;
+      width: @width;
+
+      .top {
+        margin-left: @border * 2.5;
+        border-bottom: @border * 2 solid black;
+        border-left: @border solid transparent;
+        border-right: @border solid transparent;
+        width: @border * 4;
+        height: 0;
+
+        .inside {
+          position: relative;
+          top: @border;
+          border-bottom: @border solid @white;
+          border-left: @border / 2 solid transparent;
+          border-right: @border / 2 solid transparent;
+          width: @border * 3;
+          height: 0;
+        }
+      }
+
+      .bottom {
+        top: @border * 2;
+        width: 100%;
+        border-bottom: @border solid black;
+      }
+    }
+
+    .can {
+      // Value
+      @canWidth: @border * 10;
+
+      position: absolute;
+      top: @border * 4;
+      margin-left: @border;
+      box-sizing: border-box;
+      height: @canWidth;
+      border: @border solid black;
+      padding: @border * 1.5 @border;
+
+      .line {
+        box-sizing: border-box;
+        border-right: @border solid black;
+      }
+
+      .v-line {
+        float: left;
+        height: @border * 5;
+        margin-left: @border;
+
+        &:first-child {
+          margin-left: 0;
+        }
+      }
+    }
+  }
+
+  .lid {
+    transition: all 0.3s ease;
+  }
+
+  &:hover {
+    .lid {
+      transform-origin: 100% 100%;
+      transform: rotate(30deg);
+    }
+  }
+}
