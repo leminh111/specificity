@@ -23,7 +23,7 @@ var TextField = React.createClass({
   render: function() {
     var SelectorSpanNodes = this.props.data.segments.map(function(ss) {
       return (
-        <SelectorSpan type={ss.type}>
+        <SelectorSpan type={ss.type} key={ss.id}>
           {ss.selector}
         </SelectorSpan>
       );
