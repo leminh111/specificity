@@ -2,6 +2,16 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var parser = require('./index.js');
 
+var Extras = React.createClass({
+  render: function() {
+    return (
+      <div className="extras">
+        <button type="button" onClick={this.props.onDup}>Dup</button>
+      </div>
+    );
+  }
+});
+
 var SelectorSpan = React.createClass({
   render: function() {
     var className;
@@ -73,11 +83,40 @@ var SpecifictyTable = React.createClass({
   handleInput: function(selector) {
     this.setState({data: parser(selector.toString())});
   },
+  handleDup: function() {
+    this.props.onDup();
+  },
   render: function() {
     return (
       <div className="content-box">
         <TextField data={this.state.data} onInput={this.handleInput}/>
         <ListBox data={this.state.data}/>
+        <Extras onDup={this.handleDup}/>
+      </div>
+    );
+  }
+});
+
+var Specificty = React.createClass({
+  getInitialState: function() {
+    return {
+      data: [{id:11111, handleDup:this.handleDup}]
+    };
+  },
+  handleDup: function() {
+    this.state.data.push({id:Math.random(),handleDup:this.handleDup});
+    // this.forceUpdate() alternate for this.setState
+    this.forceUpdate();
+  },
+  render: function() {
+    var SpecifictyNodes = this.state.data.map(function(ss) {
+      return (
+        <SpecifictyTable onDup={ss.handleDup} key={ss.id}/>
+      );
+    });
+    return (
+      <div className="main-content">
+        {SpecifictyNodes}
       </div>
     );
   }
@@ -85,7 +124,7 @@ var SpecifictyTable = React.createClass({
 
 ReactDOM.render(
   <div>
-    <SpecifictyTable />
+    <Specificty/>
   </div>,
     document.getElementById('container')
 );
