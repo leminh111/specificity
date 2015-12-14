@@ -1,2 +1,4 @@
 karma.conf.js
 node_modules/
+src/*.js
+src/theme/css/*.css

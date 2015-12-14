@@ -71,7 +71,6 @@ var SpecifictyTable = React.createClass({
     return {data: parser('button .btn.btn-primary[data-select="link"] button#btn1:hover > span::first-letter#abc:hover::first-line')};
   },
   handleInput: function(selector) {
-    console.log(selector);
     this.setState({data: parser(selector.toString())});
   },
   render: function() {
