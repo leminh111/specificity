@@ -16,11 +16,8 @@ var SelectorSpan = React.createClass({
 });
 
 var TextField = React.createClass({
-  getInitialState: function() {
-    return {input: ''};
-  },
   handleChange: function(e) {
-    this.setState({input: e.target.value});
+    this.props.onInput(e.target.value);
   },
 
   render: function() {
@@ -33,7 +30,7 @@ var TextField = React.createClass({
     });
     return (
       <div className="text-field">
-        <input className="event-capture" value={this.state.input} onChange={this.handleChange} />
+        <input className="event-capture" value={this.props.data.raw} onChange={this.handleChange} />
         {SelectorSpanNodes}
       </div>
     );
@@ -70,22 +67,25 @@ var ListBox = React.createClass({
 });
 
 var SpecifictyTable = React.createClass({
-    render: function() {
-      this.data = parser('button .btn.btn-primary[data-select="link"] button#btn1:hover > span::first-letter#abc:hover::first-line');
-
-      return (
-        <div className="content-box">
-          <TextField data={this.data}/>
-          <ListBox data={this.data}/>
-        </div>
-      );
-    }
+  getInitialState: function() {
+    return {data: parser('button .btn.btn-primary[data-select="link"] button#btn1:hover > span::first-letter#abc:hover::first-line')};
+  },
+  handleInput: function(selector) {
+    console.log(selector);
+    this.setState({data: parser(selector.toString())});
+  },
+  render: function() {
+    return (
+      <div className="content-box">
+        <TextField data={this.state.data} onInput={this.handleInput}/>
+        <ListBox data={this.state.data}/>
+      </div>
+    );
+  }
 });
 
 ReactDOM.render(
   <div>
-    <SpecifictyTable />
-    <SpecifictyTable />
     <SpecifictyTable />
   </div>,
     document.getElementById('container')
