@@ -6,7 +6,7 @@
     "type": "git",
     "url": "git+https://github.com/leminh111/specificity.git"
   },
-  "author": "trungld <ldtpht@gmail.com>",
+  "author": "trungld <ldtpht@gmail.com>, moe <leminh111@gmail.com>",
   "license": "MIT",
   "devDependencies": {
     "babel-preset-es2015": "^6.3.13",

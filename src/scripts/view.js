@@ -84,7 +84,6 @@ var SpecifictyTable = React.createClass({
     }
   },
   handleInput: function(selector) {
-    //this.setState({data: parser(selector.toString())});
     this.props.onInput(selector, this.props.id);
   },
   handleDup: function() {
