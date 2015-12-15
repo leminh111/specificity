@@ -158,6 +158,113 @@ var Specificty = React.createClass({
       <div className="main-content">
         <button type="button" onClick={this.handleSort}>Sort</button>
         {SpecifictyNodes}
+        <CustomInput/>
+      </div>
+    );
+  }
+});
+
+var CustomInput = React.createClass({
+  getInitialState: function() {
+    return {
+      data: [
+        "f", "u", "k"
+      ]
+    }
+  },
+  componentDidMount: function() {
+    var textBox = document.getElementById('container');
+    textBox.addEventListener('keydown', this.handleKeyDown);
+  },
+  focusEl: function() {
+    var textBox = document.getElementsByClassName('text-box')[0];
+    // DOMEl need tabIndex so that DOM can be focused
+    textBox.focus();
+  },
+  handleKeyDown: function(e) {
+    var keyCode = e.keyCode;
+
+    var keyValue = null;
+    if(keyCode <= 90 && keyCode >= 65) {
+      // key for alphabet
+      if(e.shiftKey) {
+        keyValue = String.fromCharCode(keyCode);
+      } else {
+        keyValue = String.fromCharCode(keyCode + 32);
+      }
+    } else if (keyCode >= 48 && keyCode <= 57) {
+      // key for numbers
+      if (e.shiftKey) {
+        keyValue = null;
+        if (keyCode == 51) {
+          // key for #
+          keyValue = String.fromCharCode(35);
+        }
+      } else {
+        keyValue = String.fromCharCode(keyCode);
+      }
+    } else if (keyCode == 190) {
+      // key for . and >
+      if (e.shiftKey) {
+        keyValue = String.fromCharCode(62);
+      } else {
+        keyValue = String.fromCharCode(46);
+      }
+    } else if (keyCode == 189) {
+      // key for - and _
+      if (e.shiftKey) {
+        keyValue = String.fromCharCode(95);
+      } else {
+        keyValue = String.fromCharCode(45);
+      }
+    } else if (keyCode == 222) {
+      // key for ' and "
+      if (e.shiftKey) {
+        keyValue = String.fromCharCode(34);
+      } else {
+        keyValue = String.fromCharCode(39);
+      }
+    } else if (keyCode == 187) {
+      // key for = and not +
+      keyValue = String.fromCharCode(61);
+      if (e.shiftKey) {
+        keyValue = null;
+      }
+    } else if (keyCode == 186 && e.shiftKey) {
+      // key for : and not ;
+      keyValue = String.fromCharCode(58);
+    } else if (keyCode == 192 && e.shiftKey) {
+      // key for ~ and not `
+      keyValue = String.fromCharCode(126);
+    } else if (keyCode == 219) {
+      // key for [ and not {
+      keyValue = String.fromCharCode(91);
+      if (e.shiftKey) {
+        keyValue = null;
+      }
+    } else if (keyCode == 221) {
+      // key for ] and not }
+      keyValue = String.fromCharCode(93);
+      if (e.shiftKey) {
+        keyValue = null;
+      }
+    } else if (keyCode == 32) {
+      keyValue = String.fromCharCode(keyCode);
+    }
+
+    console.log(keyCode);
+    this.state.data.push(keyValue);
+    this.forceUpdate();
+  },
+  render: function() {
+    var CharacterNodes = this.state.data.map(function(c) {
+      return (
+        <span>{c}</span>
+      )
+    });
+    return (
+      <div className="text-box" tabIndex="0" onClick={this.focusEl}>
+        {CharacterNodes}
       </div>
     );
   }
