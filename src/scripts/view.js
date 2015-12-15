@@ -84,10 +84,11 @@ var SpecifictyTable = React.createClass({
     }
   },
   handleInput: function(selector) {
-    this.setState({data: parser(selector.toString())});
+    //this.setState({data: parser(selector.toString())});
+    this.props.onInput(selector, this.props.id);
   },
   handleDup: function() {
-    this.props.onDup(this.props.id, this.state.data);
+    this.props.onDup(this.props.id, this.props.data);
   },
   handleRemove: function() {
     this.props.onRemove(this.props.id);
@@ -95,8 +96,8 @@ var SpecifictyTable = React.createClass({
   render: function() {
     return (
       <div className="content-box">
-        <TextField data={this.state.data} onInput={this.handleInput}/>
-        <ListBox data={this.state.data}/>
+        <TextField data={this.props.data} onInput={this.handleInput}/>
+        <ListBox data={this.props.data}/>
         <Extras onDup={this.handleDup} onRemove={this.handleRemove}/>
       </div>
     );
@@ -109,6 +110,7 @@ var Specificty = React.createClass({
       data: [
         {
           id:11111,
+          handleInput: this.handleInput,
           handleDup: this.handleDup,
           handleRemove: this.handleRemove,
           parse: parser('button .btn.btn-primary[data-select="link"] button#btn1:hover > span::first-letter#abc:hover::first-line')
@@ -116,9 +118,15 @@ var Specificty = React.createClass({
       ]
     };
   },
+  // TODO change forceUpdate() to setState
+  handleInput: function(selector, id, data) {
+    var index = this.state.data.map(function(d){return d.id}).indexOf(id);
+    this.state.data[index].parse = parser(selector);
+    this.forceUpdate();
+  },
   handleDup: function(id, data) {
     var index = this.state.data.map(function(d){return d.id}).indexOf(id) + 1;
-    this.state.data.splice(index, 0, {id: Math.random(), handleDup: this.handleDup, handleRemove: this.handleRemove, parse: data});
+    this.state.data.splice(index, 0, {id: Math.random(), handleInput: this.handleInput, handleDup: this.handleDup, handleRemove: this.handleRemove, parse: data});
     // TODO change the random number generate system
     // this.forceUpdate() alternate for this.setState, rerender
     this.forceUpdate();
@@ -130,14 +138,26 @@ var Specificty = React.createClass({
     }
     this.forceUpdate();
   },
+  handleSort: function() {
+    this.state.data.sort(function(a, b) {
+      var specA = a.parse.types[0].length + a.parse.types[1].length * 1000 + a.parse.types[2].length * 1000000
+        , specB = b.parse.types[0].length + b.parse.types[1].length * 1000 + b.parse.types[2].length * 1000000;
+    console.log(specA,specB);
+
+
+      return specA > specB ? -1 : (specA < specB ? 1 : 0);
+    });
+    this.forceUpdate();
+  },
   render: function() {
     var SpecifictyNodes = this.state.data.map(function(d) {
       return (
-        <SpecifictyTable onDup={d.handleDup} onRemove={d.handleRemove} id={d.id} key={d.id} data={d.parse}/>
+        <SpecifictyTable onInput={d.handleInput} onDup={d.handleDup} onRemove={d.handleRemove} id={d.id} key={d.id} data={d.parse}/>
       );
     });
     return (
       <div className="main-content">
+        <button type="button" onClick={this.handleSort}>Sort</button>
         {SpecifictyNodes}
       </div>
     );
