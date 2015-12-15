@@ -9,11 +9,12 @@ module.exports = function parser(selector) {
     segments: []
   };
 
-  var rgxClasses = '(\\.[a-z0-9-_]+)',
-      rgxIds = '(#[a-z0-9-_]+)',
-      rgxPseuClasses = '(\\:[a-z0-9-_]+)',
-      rgxEl = '(^[a-z]+)|((\\s)([a-z])+)',
-      rgxPseuEl = '(\\:\\:[a-z0-9-_]+)',
+  //TODO regex need update
+  var rgxClasses = '(\\.[a-zA-Z0-9-_]+)',
+      rgxIds = '(#[a-zA-Z0-9-_]+)',
+      rgxPseuClasses = '(\\:[a-zA-Z0-9-_]+)',
+      rgxEl = '(^[a-zA-Z0-9-_]+)|((\\s)([a-zA-Z0-9-_])+)',
+      rgxPseuEl = '(\\:\\:[a-zA-Z0-9-_]+)',
       rgxAttr = '(\\[[^>:#.\\s]+\\])',
       rgxNone = '(\\s+)|(>)|(~)|(\\:)|(#)|(\\.)|(.+\\])|(\\[.+(?!\\]))',
 

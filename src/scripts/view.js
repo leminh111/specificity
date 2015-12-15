@@ -7,6 +7,7 @@ var Extras = React.createClass({
     return (
       <div className="extras">
         <button type="button" onClick={this.props.onDup}>Dup</button>
+        <button type="button" onClick={this.props.onRemove}>Remove</button>
       </div>
     );
   }
@@ -88,12 +89,15 @@ var SpecifictyTable = React.createClass({
   handleDup: function() {
     this.props.onDup(this.props.id, this.state.data);
   },
+  handleRemove: function() {
+    this.props.onRemove(this.props.id);
+  },
   render: function() {
     return (
       <div className="content-box">
         <TextField data={this.state.data} onInput={this.handleInput}/>
         <ListBox data={this.state.data}/>
-        <Extras onDup={this.handleDup}/>
+        <Extras onDup={this.handleDup} onRemove={this.handleRemove}/>
       </div>
     );
   }
@@ -105,24 +109,31 @@ var Specificty = React.createClass({
       data: [
         {
           id:11111,
-          handleDup:this.handleDup,
+          handleDup: this.handleDup,
+          handleRemove: this.handleRemove,
           parse: parser('button .btn.btn-primary[data-select="link"] button#btn1:hover > span::first-letter#abc:hover::first-line')
         }
       ]
     };
   },
   handleDup: function(id, data) {
-    console.log(data);
     var index = this.state.data.map(function(d){return d.id}).indexOf(id) + 1;
-    this.state.data.splice(index, 0, {id: Math.random(), handleDup: this.handleDup, parse: data});
+    this.state.data.splice(index, 0, {id: Math.random(), handleDup: this.handleDup, handleRemove: this.handleRemove, parse: data});
     // TODO change the random number generate system
     // this.forceUpdate() alternate for this.setState, rerender
+    this.forceUpdate();
+  },
+  handleRemove: function(id) {
+    var index = this.state.data.map(function(d){return d.id}).indexOf(id);
+    if (index > -1) {
+      this.state.data.splice(index, 1);
+    }
     this.forceUpdate();
   },
   render: function() {
     var SpecifictyNodes = this.state.data.map(function(d) {
       return (
-        <SpecifictyTable onDup={d.handleDup} id={d.id} key={d.id} data={d.parse}/>
+        <SpecifictyTable onDup={d.handleDup} onRemove={d.handleRemove} id={d.id} key={d.id} data={d.parse}/>
       );
     });
     return (
