@@ -174,7 +174,7 @@ var CustomInput = React.createClass({
   },
   componentDidMount: function() {
     var textBox = document.getElementById('container');
-    textBox.addEventListener('keydown', this.handleKeyDown);
+    textBox.addEventListener('keydown', this.handleKeyDown, true);
   },
   focusEl: function() {
     var textBox = document.getElementsByClassName('text-box')[0];
@@ -248,8 +248,10 @@ var CustomInput = React.createClass({
       if (e.shiftKey) {
         keyValue = null;
       }
-    } else if (keyCode == 32) {
+    } else if (keyCode == 32 || keyCode == 8) {
       keyValue = String.fromCharCode(keyCode);
+      // prevent backspace backward the page
+      e.preventDefault();
     }
 
     console.log(keyCode);
