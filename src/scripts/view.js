@@ -27,11 +27,13 @@ var SelectorSpan = React.createClass({
 });
 
 var TextField = React.createClass({
-  handleChange: function(e) {
-    this.props.onInput(e.target.value);
+  handleChange: function(value) {
+    // e.target.value will be value gotten from custominput
+    this.props.onInput(value);
   },
 
   render: function() {
+    var valueSpan = this.props.data.raw.split('');
     var SelectorSpanNodes = this.props.data.segments.map(function(ss) {
       return (
         <SelectorSpan type={ss.type} key={ss.id}>
@@ -41,7 +43,7 @@ var TextField = React.createClass({
     });
     return (
       <div className="text-field">
-        <input className="event-capture" value={this.props.data.raw} onChange={this.handleChange} />
+        <CustomInput className="event-capture" setValue={valueSpan} onChange={this.handleChange} />
         {SelectorSpanNodes}
       </div>
     );
@@ -88,6 +90,7 @@ var SpecifictyTable = React.createClass({
   },
   handleDup: function() {
     this.props.onDup(this.props.id, this.props.data);
+    console.log(this.props);
   },
   handleRemove: function() {
     this.props.onRemove(this.props.id);
@@ -141,8 +144,6 @@ var Specificty = React.createClass({
     this.state.data.sort(function(a, b) {
       var specA = a.parse.types[0].length + a.parse.types[1].length * 1000 + a.parse.types[2].length * 1000000
         , specB = b.parse.types[0].length + b.parse.types[1].length * 1000 + b.parse.types[2].length * 1000000;
-    console.log(specA,specB);
-
 
       return specA > specB ? -1 : (specA < specB ? 1 : 0);
     });
@@ -158,7 +159,6 @@ var Specificty = React.createClass({
       <div className="main-content">
         <button type="button" onClick={this.handleSort}>Sort</button>
         {SpecifictyNodes}
-        <CustomInput/>
       </div>
     );
   }
@@ -167,9 +167,7 @@ var Specificty = React.createClass({
 var CustomInput = React.createClass({
   getInitialState: function() {
     return {
-      data: [
-        " "
-      ]
+      data: this.props.setValue
     }
   },
   componentDidMount: function() {
@@ -305,7 +303,7 @@ var CustomInput = React.createClass({
       spanArray[i].style.backgroundColor = "white";
     }
     spanArray.item(this.state.index).style.backgroundColor = "red";
-    console.log(keyCode);
+    this.props.onChange(this.state.data.join(''));
   },
   render: function() {
     var CharacterNodes = this.state.data.map(function(c) {
