@@ -168,20 +168,31 @@ var CustomInput = React.createClass({
   getInitialState: function() {
     return {
       data: [
-        "f", "u", "k"
+        " "
       ]
     }
   },
   componentDidMount: function() {
-    var textBox = document.getElementById('container');
+    var textBox = document.getElementsByClassName('text-box')[0];
     textBox.addEventListener('keydown', this.handleKeyDown, true);
+    textBox.addEventListener('blur', this.focusOut, true);
+    this.state.index = this.state.data.length - 1;
+  },
+  focusOut: function() {
+    var spanArray = document.getElementsByClassName('text-box')[0].childNodes;
+    for (var i=0; i<spanArray.length; i++) {
+      spanArray[i].style.backgroundColor = "white";
+    }
   },
   focusEl: function() {
     var textBox = document.getElementsByClassName('text-box')[0];
     // DOMEl need tabIndex so that DOM can be focused
     textBox.focus();
+    var spanArray = document.getElementsByClassName('text-box')[0].childNodes;
+    spanArray.item(this.state.index).style.backgroundColor = "red";
   },
   handleKeyDown: function(e) {
+    var spanArray = document.getElementsByClassName('text-box')[0].childNodes;
     var keyCode = e.keyCode;
 
     var keyValue = null;
@@ -248,15 +259,53 @@ var CustomInput = React.createClass({
       if (e.shiftKey) {
         keyValue = null;
       }
-    } else if (keyCode == 32 || keyCode == 8) {
+    } else if (keyCode == 32) {
       keyValue = String.fromCharCode(keyCode);
+    } else if (keyCode == 8) {
       // prevent backspace backward the page
       e.preventDefault();
+      // Cant backspace if index <= 0
+      if (this.state.index > 0) {
+        this.state.data.splice(this.state.index-1, 1);
+        this.state.index--;
+      }
+    } else if (keyCode == 46) {
+      // Delete
+      e.preventDefault();
+      // Cant delete if index > length
+      if (this.state.index < this.state.data.length-1) {
+        this.state.data.splice(this.state.index, 1);
+      }
+    } else if (keyCode == 37) {
+      // arrowleft
+      if (this.state.index > 0) {
+        this.state.index-- ;
+      }
+    } else if (keyCode == 39) {
+      // arrowright
+      if (this.state.index < this.state.data.length-1) {
+        this.state.index++;
+      }
+    } else if (keyCode == 36) {
+      // home
+      this.state.index = 0;
+    } else if (keyCode == 35) {
+      // end
+      if (this.state.index < this.state.data.length-1) {
+        this.state.index = this.state.data.length - 1;
+      }
     }
 
-    console.log(keyCode);
-    this.state.data.push(keyValue);
+    if (keyValue) {
+      this.state.data.splice(this.state.index, 0, keyValue);
+      this.state.index++;
+    }
     this.forceUpdate();
+    for (var i=0; i<spanArray.length; i++) {
+      spanArray[i].style.backgroundColor = "white";
+    }
+    spanArray.item(this.state.index).style.backgroundColor = "red";
+    console.log(keyCode);
   },
   render: function() {
     var CharacterNodes = this.state.data.map(function(c) {
