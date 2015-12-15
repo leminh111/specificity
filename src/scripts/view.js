@@ -78,13 +78,15 @@ var ListBox = React.createClass({
 
 var SpecifictyTable = React.createClass({
   getInitialState: function() {
-    return {data: parser('button .btn.btn-primary[data-select="link"] button#btn1:hover > span::first-letter#abc:hover::first-line')};
+    return {
+      data: this.props.data
+    }
   },
   handleInput: function(selector) {
     this.setState({data: parser(selector.toString())});
   },
   handleDup: function() {
-    this.props.onDup();
+    this.props.onDup(this.props.id, this.state.data);
   },
   render: function() {
     return (
@@ -100,18 +102,27 @@ var SpecifictyTable = React.createClass({
 var Specificty = React.createClass({
   getInitialState: function() {
     return {
-      data: [{id:11111, handleDup:this.handleDup}]
+      data: [
+        {
+          id:11111,
+          handleDup:this.handleDup,
+          parse: parser('button .btn.btn-primary[data-select="link"] button#btn1:hover > span::first-letter#abc:hover::first-line')
+        }
+      ]
     };
   },
-  handleDup: function() {
-    this.state.data.push({id:Math.random(),handleDup:this.handleDup});
-    // this.forceUpdate() alternate for this.setState
+  handleDup: function(id, data) {
+    console.log(data);
+    var index = this.state.data.map(function(d){return d.id}).indexOf(id) + 1;
+    this.state.data.splice(index, 0, {id: Math.random(), handleDup: this.handleDup, parse: data});
+    // TODO change the random number generate system
+    // this.forceUpdate() alternate for this.setState, rerender
     this.forceUpdate();
   },
   render: function() {
-    var SpecifictyNodes = this.state.data.map(function(ss) {
+    var SpecifictyNodes = this.state.data.map(function(d) {
       return (
-        <SpecifictyTable onDup={ss.handleDup} key={ss.id}/>
+        <SpecifictyTable onDup={d.handleDup} id={d.id} key={d.id} data={d.parse}/>
       );
     });
     return (
