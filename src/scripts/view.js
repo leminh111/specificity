@@ -138,6 +138,7 @@ var Specificty = React.createClass({
 });
 
 var CustomInput = React.createClass({
+  // TODO remove this.state.data
   getInitialState: function() {
     var selectorSpanNodes = this.props.setValue.map(function(ss) {
       var sel = ss.selector.split(''),
@@ -169,10 +170,10 @@ var CustomInput = React.createClass({
     textBox.addEventListener('keydown', this.handleKeyDown, true);
     //textBox.addEventListener('blur', this.focusOut, true);
     this.state.data.push({sel: ' ', typ: 0});
-    this.state.index = this.state.data.length - 1;
     this.state.raw = this.state.data.map(function(d) {
       return d.sel
     });
+    this.state.index = this.state.raw.length - 1;
     // FIXME
     this.forceUpdate();
   },
@@ -187,7 +188,6 @@ var CustomInput = React.createClass({
     // DOMEl need tabIndex so that DOM can be focused
     textBox.focus();
     var spanArray = textBox.childNodes;
-    spanArray.item(this.state.index).style.backgroundColor = "red";
   },
   handleKeyDown: function(e) {
     var spanArray = document.getElementsByClassName('text-box')[0].childNodes;
@@ -271,7 +271,7 @@ var CustomInput = React.createClass({
       // Delete
       e.preventDefault();
       // Cant delete if index > length
-      if (this.state.index < this.state.data.length-1) {
+      if (this.state.index < this.state.raw.length-1) {
         this.state.raw.splice(this.state.index, 1);
       }
     } else if (keyCode == 37) {
@@ -281,7 +281,7 @@ var CustomInput = React.createClass({
       }
     } else if (keyCode == 39) {
       // arrowright
-      if (this.state.index < this.state.data.length-1) {
+      if (this.state.index < this.state.raw.length-1) {
         this.state.index++;
       }
     } else if (keyCode == 36) {
@@ -289,8 +289,8 @@ var CustomInput = React.createClass({
       this.state.index = 0;
     } else if (keyCode == 35) {
       // end
-      if (this.state.index < this.state.data.length-1) {
-        this.state.index = this.state.data.length - 1;
+      if (this.state.index < this.state.raw.length-1) {
+        this.state.index = this.state.raw.length - 1;
       }
     }
 
@@ -298,15 +298,15 @@ var CustomInput = React.createClass({
       this.state.raw.splice(this.state.index, 0, keyValue);
       this.state.index++;
     }
-//    for (var i=0; i<spanArray.length; i++) {
-//      spanArray[i].style.background= "none";
-//    }
-    //spanArray.item(this.state.index).style.backgroundColor = "red";
     this.props.onChange(this.state.raw.join(''));
+    var spanArray = document.getElementsByClassName('text-box')[0].childNodes;
+    for (var i=0; i<spanArray.length; i++) {
+      spanArray[i].className = spanArray[i].className.replace(' cursor','');
+    }
+    spanArray[this.state.index].className += " cursor";
     this.forceUpdate();
   },
   render: function() {
-    console.log(this.props.setValue);
     var selectorSpanNodes = this.props.setValue.map(function(ss) {
       var sel = ss.selector.split(''),
           typ = ss.type,

@@ -13,10 +13,10 @@ module.exports = function parser(selector) {
   var rgxClasses = '(\\.[a-zA-Z0-9-_]+)',
       rgxIds = '(#[a-zA-Z0-9-_]+)',
       rgxPseuClasses = '(\\:[a-zA-Z0-9-_]+)',
-      rgxEl = '(^[a-zA-Z0-9-_]+)|((\\s)([a-zA-Z0-9-_])+)',
+      rgxEl = '(^[a-zA-Z0-9-_]+)|((\\s)([a-zA-Z0-9-_]+))',
       rgxPseuEl = '(\\:\\:[a-zA-Z0-9-_]+)',
       rgxAttr = '(\\[[^>:#.\\s]+\\])',
-      rgxNone = '(\\s+)|(>)|(~)|(\\:)|(#)|(\\.)|(.+\\])|(\\[.+(?!\\]))',
+      rgxNone = '(\\s)|(>)|(~)|(\\:)|(#)|(\\.)|(.+\\])|(\\[.+(?!\\]))',
 
       rgxTotal = rgxClasses + '|' + rgxIds + '|' + rgxPseuClasses + '|' + rgxEl + '|' + rgxPseuEl + '|' + rgxAttr + '|' + rgxNone;
 
@@ -42,10 +42,12 @@ module.exports = function parser(selector) {
       if (matched[6]){
         var objSpace = createSegment(matched[6].toString(), 'none');
         result.segments.push(objSpace);
+        var obj = createSegment(matched[7].toString(), 0);
+        result.types[0].push(obj.selector);
+      } else {
+        var obj = createSegment(matchedSelector, 0);
+        result.types[0].push(obj.selector);
       }
-
-      var obj = createSegment(matchedSelector, 0);
-      result.types[0].push(obj.selector);
     } else if (rexType1.exec(matchedSelector)) {
       var obj = createSegment(matchedSelector, 1);
       result.types[1].push(obj.selector);
