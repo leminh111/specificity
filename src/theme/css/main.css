@@ -1,36 +1,14 @@
-@-webkit-keyframes fadeIn {
-  0% {
-    opacity: 0;
-    -webkit-transform: scale(0);
-  }
-  100% {
-    opacity: 1;
-    -webkit-transform: scale(1);
-  }
-}
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-    transform: scale(0);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-.active {
-  -webkit-animation: fadeIn 0.5s;
-  animation: fadeIn 0.5s;
+.container {
+  width: 970px;
+  margin-left: auto;
+  margin-right: auto;
 }
 .content-box {
-  position: relative;
-  margin-top: 20px;
-  padding: 20px;
+  padding: 20px 20px 5px;
   background-color: #fff;
   border-radius: 2px;
   box-shadow: 0 0 5px #888888;
-  font-family: Roboto;
-  z-index: 1;
+  font-family: 'Droid Sans Mono';
 }
 .content-box .text-field {
   padding: 2px;
@@ -40,13 +18,6 @@
   display: block;
   clear: both;
   content: "";
-}
-.content-box .text-field .event-capture {
-  display: block;
-  position: absolute;
-  width: 100%;
-  border: 0;
-  resize: none;
 }
 .content-box .text-field span {
   font-size: 28px;
@@ -58,33 +29,35 @@
   width: 100%;
   margin-top: 20px;
 }
-.content-box .list-box .table-cell {
+.content-box .list-box .box {
+  position: relative;
   display: table-cell;
   width: 1%;
   border-left: 5px solid #fff;
-}
-.content-box .list-box .table-cell .box {
-  position: relative;
   border-radius: 5px;
 }
-.content-box .list-box .table-cell .box:before {
+.content-box .list-box .box:first-child {
+  border-left: 0;
+}
+.content-box .list-box .box:before {
   display: block;
   content: "";
   padding-top: 100%;
 }
-.content-box .list-box .table-cell .box .inner {
+.content-box .list-box .box .inner {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
 }
-.content-box .list-box .table-cell .box .inner .number {
+.content-box .list-box .box .inner .number {
   width: 100%;
   display: block;
   font-size: 80px;
   font-weight: bold;
 }
+<<<<<<< HEAD
 .action-event {
   position: relative;
   z-index: 0;
@@ -113,6 +86,8 @@
 .action-event:hover .extras {
   opacity: 1;
 }
+=======
+>>>>>>> master
 .type-0 {
   background-color: #2AA198;
   color: #fff;
@@ -125,6 +100,7 @@
   background-color: #D33682;
   color: #fff;
 }
+<<<<<<< HEAD
 .btn {
   display: inline-block;
   text-align: center;
@@ -273,28 +249,18 @@
   height: 34.09090909px;
   border: 3.40909091px solid black;
   padding: 5.11363636px 3.40909091px;
+=======
+.type-none {
+  white-space: pre;
+  color: #fff;
+>>>>>>> master
 }
-.icon-trash .trash-body .can .line {
+.text-box {
+  height: 80px;
+  width: 960px;
+  color: #fff;
   box-sizing: border-box;
-  border-right: 3.40909091px solid black;
 }
-.icon-trash .trash-body .can .v-line {
-  float: left;
-  height: 17.04545455px;
-  margin-left: 3.40909091px;
-}
-.icon-trash .trash-body .can .v-line:first-child {
-  margin-left: 0;
-}
-.icon-trash .lid {
-  transition: all 0.3s ease;
-}
-.icon-trash:hover .lid {
-  transform-origin: 100% 100%;
-  transform: rotate(30deg);
-}
-.container {
-  width: 970px;
-  margin-left: auto;
-  margin-right: auto;
+.text-box .cursor {
+  background-color: red;
 }

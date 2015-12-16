@@ -32,7 +32,7 @@
   background-color: @white;
   border-radius: 2px;
   box-shadow: 0 0 5px #888888;
-  font-family: Roboto;
+  font-family: 'Droid Sans Mono';
   z-index: 1;
 
   .text-field {
@@ -153,6 +153,22 @@
 .type-2 {
   background-color: @pink;
   color: @white;
+}
+.type-none {
+  // Make whitespace in span visible
+  white-space: pre;
+  color: @white;
+}
+// Text field
+.text-box {
+  height: 80px;
+  width: 960px;
+  color: @white;
+  box-sizing: border-box;
+
+  .cursor {
+    background-color: red;
+  }
 }
 
 .btn {

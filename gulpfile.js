@@ -1,6 +1,25 @@
 var gulp = require('gulp'),
- connect = require('gulp-connect'),
-    less = require('gulp-less');
+    connect = require('gulp-connect'),
+    less = require('gulp-less'),
+    browserify = require('browserify'),
+    source = require('vinyl-source-stream'),
+    buffer = require('vinyl-buffer');
+
+gulp.task('browserify', function() {
+  var b = browserify({
+    entries: './src/scripts/view.js',
+    debug: true,
+    transform: [
+      ["babelify", {presets: ['react']}]
+      // presets es2015 screw things up (matched undefined)
+    ]
+  });
+
+  return b.bundle()
+          .pipe(source('main.js'))
+          .pipe(buffer())
+          .pipe(gulp.dest('./src/'));
+});
 
 gulp.task('webserver', function() {
   connect.server({
@@ -10,9 +29,7 @@ gulp.task('webserver', function() {
 });
 
 gulp.task('livereload', function() {
-  console.log('r');
-    gulp.src('./src/theme/css/*.css').pipe(connect.reload());
-    gulp.src('./src/index.html').pipe(connect.reload());
+    gulp.src('./src/*.html').pipe(connect.reload());
 });
 
 gulp.task('less', function() {
@@ -23,7 +40,8 @@ gulp.task('less', function() {
 
 gulp.task('watch', function() {
     gulp.watch('./src/theme/less/*.less', ['less']);
-    gulp.watch(['./src/theme/css/*.css', './src/index.html'], ['livereload']);
+    gulp.watch('./src/scripts/*.js', ['browserify']);
+    gulp.watch(['./src/theme/css/*.css','./src/main.js', './src/index.html'], ['livereload']);
 });
 
-gulp.task('default', ['less', 'webserver', 'livereload', 'watch']);
+gulp.task('default', ['browserify', 'less', 'webserver', 'watch']);

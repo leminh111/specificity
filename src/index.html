@@ -2,102 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Hello</title>
-  <link rel="stylesheet" href="./theme/css/main.css">
-  <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet" type="text/css">
+  <title>Specificity</title>
+  <link rel="stylesheet" type="text/css" href="theme/css/main.css">
+  <link href='https://fonts.googleapis.com/css?family=Droid+Sans+Mono' rel='stylesheet' type='text/css'>
 </head>
+
 <body>
-  <div class="container" id="list">
-    <div class="action-event">
-      <div class="content-box active">
-        <div class="text-field">
-          <div class="event-capture"></div>
-          <span class="type-0">#nav</span>
-          <span class="type-1">.selected</span>
-          <span class="type-none"> &gt; </span>
-          <span class="type-1">a</span>
-          <span class="type-2">:hover</span>
-        </div>
-        <div class="list-box-container">
-          <div class="list-box">
-            <div class="table-cell">
-              <div class="box type-2">
-                <div class="inner">
-                  <span class="number">1</span>
-                  <span class="description">IDs</span>
-                </div>
-              </div>
-            </div>
-            <div class="table-cell">
-              <div class="box type-1">
-                <div class="inner">
-                  <span class="number">2</span>
-                  <span class="description">Classes, attributes and pseudo-classes</span>
-                </div>
-              </div>
-            </div>
-            <div class="table-cell">
-              <div class="box type-0">
-                <div class="inner">
-                  <span class="number">1</span>
-                  <span class="description">Elements and pseudo-elements</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="extras">
-        <div class="btn btn-success extra-left" onclick="add(this)">
-          <div class="icon icon-copy">
-            <div class="paper paper-first">
-              <div class="top-left"></div>
-              <div class="top-right"></div>
-              <div class="bottom">
-                <div class="lines">
-                  <div class="line line-normal"></div>
-                  <div class="line line-normal"></div>
-                  <div class="line line-normal"></div>
-                  <div class="line line-short"></div>
-                </div>
-              </div>
-            </div>
-            <div class="paper paper-second">
-              <div class="top-left"></div>
-              <div class="top-right"></div>
-              <div class="bottom">
-                <div class="lines">
-                  <div class="line line-normal"></div>
-                  <div class="line line-normal"></div>
-                  <div class="line line-normal"></div>
-                  <div class="line line-short"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="btn btn-danger extra-right" onclick="remove(this)">
-          <div class="icon icon-trash">
-            <div class="trash-body">
-              <div class="lid">
-                <div class="top">
-                  <div class="inside"></div>
-                </div>
-                <div class="bottom"></div>
-              </div>
-              <div class="can">
-                <div class="lines">
-                  <div class="line v-line"></div>
-                  <div class="line v-line"></div>
-                  <div class="line v-line"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div class="container" id="list"></div>
+  <script src="main.js"></script>
   <script src="./theme/js/main.js"></script>
 </body>
 </html>
