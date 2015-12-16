@@ -33,8 +33,10 @@ var TextField = React.createClass({
   },
 
   render: function() {
+    // structure the props.data.segments data into each letter with types
     var valueSpan = this.props.data.raw.split('');
     var SelectorSpanNodes = this.props.data.segments.map(function(ss) {
+      console.log(ss.selector.split(''));
       return (
         <SelectorSpan type={ss.type} key={ss.id}>
           {ss.selector}
@@ -174,19 +176,21 @@ var CustomInput = React.createClass({
     var textBox = document.getElementsByClassName('text-box')[0];
     textBox.addEventListener('keydown', this.handleKeyDown, true);
     textBox.addEventListener('blur', this.focusOut, true);
+    this.state.data.push(' ');
     this.state.index = this.state.data.length - 1;
+    this.forceUpdate();
   },
   focusOut: function() {
     var spanArray = document.getElementsByClassName('text-box')[0].childNodes;
     for (var i=0; i<spanArray.length; i++) {
-      spanArray[i].style.backgroundColor = "white";
+      spanArray[i].style.background= "none";
     }
   },
   focusEl: function() {
     var textBox = document.getElementsByClassName('text-box')[0];
     // DOMEl need tabIndex so that DOM can be focused
     textBox.focus();
-    var spanArray = document.getElementsByClassName('text-box')[0].childNodes;
+    var spanArray = textBox.childNodes;
     spanArray.item(this.state.index).style.backgroundColor = "red";
   },
   handleKeyDown: function(e) {
@@ -300,7 +304,7 @@ var CustomInput = React.createClass({
     }
     this.forceUpdate();
     for (var i=0; i<spanArray.length; i++) {
-      spanArray[i].style.backgroundColor = "white";
+      spanArray[i].style.background= "none";
     }
     spanArray.item(this.state.index).style.backgroundColor = "red";
     this.props.onChange(this.state.data.join(''));
