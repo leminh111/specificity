@@ -35,18 +35,32 @@ var TextField = React.createClass({
   render: function() {
     // structure the props.data.segments data into each letter with types
     var valueSpan = this.props.data.raw.split('');
-    var SelectorSpanNodes = this.props.data.segments.map(function(ss) {
-      console.log(ss.selector.split(''));
-      return (
-        <SelectorSpan type={ss.type} key={ss.id}>
-          {ss.selector}
-        </SelectorSpan>
-      );
+    var selectorSpanNodes = this.props.data.segments.map(function(ss) {
+      var sel = ss.selector.split(''),
+          typ = ss.type,
+          nodes = {
+            sel,
+            typ
+          };
+      return nodes;
     });
+    var selectorNodes = [];
+    for (var k=0;k<selectorSpanNodes.length;k++) {
+      for (var i=0;i<selectorSpanNodes[k].sel.length;i++) {
+        var sel = selectorSpanNodes[k].sel[i],
+            typ = selectorSpanNodes[k].typ,
+            obj = {
+              sel,
+              typ
+            };
+        selectorNodes.push(obj);
+      }
+    }
+    console.log(selectorNodes);
+    console.log(valueSpan);
     return (
       <div className="text-field">
         <CustomInput className="event-capture" setValue={valueSpan} onChange={this.handleChange} />
-        {SelectorSpanNodes}
       </div>
     );
   }
