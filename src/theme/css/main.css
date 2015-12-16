@@ -1,0 +1,84 @@
+.container {
+  width: 970px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.content-box {
+  padding: 20px 20px 5px;
+  background-color: #fff;
+  border-radius: 2px;
+  box-shadow: 0 0 5px #888888;
+  font-family: 'Droid Sans Mono';
+}
+.content-box .text-field {
+  padding: 2px;
+  background-color: #002B36;
+}
+.content-box .text-field:after {
+  display: block;
+  clear: both;
+  content: "";
+}
+.content-box .text-field span {
+  font-size: 28px;
+  float: left;
+}
+.content-box .list-box {
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+  margin-top: 20px;
+}
+.content-box .list-box .box {
+  position: relative;
+  display: table-cell;
+  width: 1%;
+  border-left: 5px solid #fff;
+  border-radius: 5px;
+}
+.content-box .list-box .box:first-child {
+  border-left: 0;
+}
+.content-box .list-box .box:before {
+  display: block;
+  content: "";
+  padding-top: 100%;
+}
+.content-box .list-box .box .inner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+.content-box .list-box .box .inner .number {
+  width: 100%;
+  display: block;
+  font-size: 80px;
+  font-weight: bold;
+}
+.type-0 {
+  background-color: #2AA198;
+  color: #fff;
+}
+.type-1 {
+  background-color: #268BD2;
+  color: #fff;
+}
+.type-2 {
+  background-color: #D33682;
+  color: #fff;
+}
+.type-none {
+  white-space: pre;
+  color: #fff;
+}
+.text-box {
+  height: 80px;
+  width: 960px;
+  color: #fff;
+  box-sizing: border-box;
+}
+.text-box .cursor {
+  background-color: red;
+}

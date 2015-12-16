@@ -6,8 +6,53 @@ var Extras = React.createClass({
   render: function() {
     return (
       <div className="extras">
-        <button type="button" onClick={this.props.onDup}>Dup</button>
-        <button type="button" onClick={this.props.onRemove}>Remove</button>
+        <div className="btn btn-success extra-left" onClick={this.props.onDup} onclick="add(this)">
+          <div className="icon icon-copy">
+            <div className="paper paper-first">
+              <div className="top-left"></div>
+              <div className="top-right"></div>
+              <div className="bottom">
+                <div className="lines">
+                  <div className="line line-normal"></div>
+                  <div className="line line-normal"></div>
+                  <div className="line line-normal"></div>
+                  <div className="line line-short"></div>
+                </div>
+              </div>
+            </div>
+            <div className="paper paper-second">
+              <div className="top-left"></div>
+              <div className="top-right"></div>
+              <div className="bottom">
+                <div className="lines">
+                  <div className="line line-normal"></div>
+                  <div className="line line-normal"></div>
+                  <div className="line line-normal"></div>
+                  <div className="line line-short"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="btn btn-danger extra-right" onClick={this.props.onRemove} onclick="remove(this)">
+          <div className="icon icon-trash">
+            <div className="trash-body">
+              <div className="lid">
+                <div className="top">
+                  <div className="inside"></div>
+                </div>
+                <div className="bottom"></div>
+              </div>
+              <div className="can">
+                <div className="lines">
+                  <div className="line v-line"></div>
+                  <div className="line v-line"></div>
+                  <div className="line v-line"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -33,10 +78,12 @@ var BoxType = React.createClass({
   render: function() {
     var className="box type-" + this.props.type;
     return (
-      <div className={className}>
-        <div className="inner">
-          <span className="number">{this.props.number}</span>
-          <span className="description">{this.props.desc}</span>
+      <div className="table-cell">
+        <div className={className}>
+          <div className="inner">
+            <span className="number">{this.props.number}</span>
+            <span className="description">{this.props.desc}</span>
+          </div>
         </div>
       </div>
     );
@@ -49,9 +96,9 @@ var ListBox = React.createClass({
       <div className="list-box">
         <BoxType type="2" desc="IDs"
           number={this.props.data.types[2].length} />
-        <BoxType type="1" desc="classes"
+        <BoxType type="1" desc="Classes, attributes and pseudo-classes"
           number={this.props.data.types[1].length} />
-        <BoxType type="0" desc="el"
+        <BoxType type="0" desc="Elements and pseudo-elements"
           number={this.props.data.types[0].length} />
       </div>
     );
@@ -70,10 +117,12 @@ var SpecifictyTable = React.createClass({
   },
   render: function() {
     return (
-      <div className="content-box">
-        <TextField data={this.props.data} onInput={this.handleInput}/>
-        <ListBox data={this.props.data}/>
-        <Extras onDup={this.handleDup} onRemove={this.handleRemove}/>
+      <div className="action-event">
+        <div className="content-box active">
+          <TextField data={this.props.data} onInput={this.handleInput}/>
+          <ListBox data={this.props.data}/>
+          <Extras onDup={this.handleDup} onRemove={this.handleRemove}/>
+        </div>
       </div>
     );
   }
@@ -346,6 +395,6 @@ ReactDOM.render(
   <div>
     <Specificty/>
   </div>,
-    document.getElementById('container')
+    document.getElementById('list')
 );
 
