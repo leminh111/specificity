@@ -85,9 +85,6 @@
   font-size: 80px;
   font-weight: bold;
 }
-.content-box .list-box .table-cell:first-child {
-  border-left: 0;
-}
 .action-event {
   position: relative;
   z-index: 0;
@@ -151,6 +148,10 @@
 .btn-success {
   background-color: #00C853;
   border: 0;
+}
+.list-box-container {
+  display: block;
+  margin-left: -5px;
 }
 .icon {
   position: relative;
