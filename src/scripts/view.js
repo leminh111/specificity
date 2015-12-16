@@ -1,3 +1,42 @@
+//<Spec>
+  //<SpecTab>
+    //<Text>
+      //<CustomInput>
+    //<List>
+      //<Box>
+    //<Extra>
+//<SpecifictyTable
+//  onInput={d.handleInput}
+//  onDup={d.handleDup}
+//  onRemove={d.handleRemove}
+//  handleFocus={d.handleFocus}
+//  tabindex={d.tabindex}
+//  id={d.id}
+//  key={d.id}
+//  data={d.parse}
+///>
+//<TextField
+//  data={this.props.data}
+//  handleFocus={this.handleFocus}
+//  tabindex={this.props.tabindex}
+//  onInput={this.handleInput}
+///>
+//<ListBox
+//  data={this.props.data}
+///>
+//<Extras
+//  onDup={this.handleDup}
+//  onRemove={this.handleRemove}
+///>
+//<CustomInput className="event-capture"
+//  handleFocus={this.props.handleFocus}
+//  tabindex={this.props.tabindex}
+//  setValue={this.props.data.segments}
+//  onChange={this.handleChange}
+///>
+//<BoxType type="2" desc="IDs" 
+//  number={this.props.data.types[2].length}
+///>
 var React = require('react');
 var ReactDOM = require('react-dom');
 var parser = require('./index.js');
@@ -59,6 +98,16 @@ var Extras = React.createClass({
 });
 
 var TextField = React.createClass({
+//<TextField
+//  data={this.props.data}
+//  handleFocus={this.handleFocus}
+//  tabindex={this.props.tabindex}
+//  onInput={this.handleInput}
+///>
+  //this.props.data = {
+  //  raw:,types:,segments:[Obj,Obj]
+  //  eg: Obj = {selector: "button", type: "none"}
+  //}
   handleChange: function(value) {
     // e.target.value will be value gotten from custominput
     this.props.onInput(value);
@@ -68,13 +117,16 @@ var TextField = React.createClass({
     // structure the props.data.segments data into each letter with types
     return (
       <div className="text-field">
-        <CustomInput className="event-capture" handleFocus={this.props.handleFocus} setValue={this.props.data.segments} onChange={this.handleChange} />
+        <CustomInput className="event-capture" handleFocus={this.props.handleFocus} tabindex={this.props.tabindex} setValue={this.props.data.segments} onChange={this.handleChange} />
       </div>
     );
   }
 });
 
 var BoxType = React.createClass({
+//<BoxType type="2" desc="IDs" 
+//  number={this.props.data.types[2].length}
+///>
   render: function() {
     var className="box type-" + this.props.type;
     return (
@@ -91,6 +143,14 @@ var BoxType = React.createClass({
 });
 
 var ListBox = React.createClass({
+//<ListBox
+//  data={this.props.data}
+///>
+  // this.props.data = {
+  //   raw:,
+  //   types: [Arr,Arr,Arr],
+  //   segments:
+  // }
   render: function() {
     return (
       <div className="list-box-container">
@@ -108,9 +168,31 @@ var ListBox = React.createClass({
 });
 
 var CustomInput = React.createClass({
+//<TextField
+//  data={this.props.data}
+//  handleFocus={this.handleFocus}
+//  tabindex={this.props.tabindex}
+//  onInput={this.handleInput}
+///>
+  //this.props.data = {
+  //  raw:,types:,segments:[Obj,Obj]
+  //  eg: Obj = {selector: "button", type: "none"}
+  //}
+//<CustomInput className="event-capture"
+//  handleFocus={this.props.handleFocus}
+//  tabindex={this.props.tabindex}
+//  setValue={this.props.data.segments}
+//  onChange={this.handleChange}
+///>
+  //selectorSpanNodes =
+  //  [{sel:['b','u'],typ:0},{}]
+  //
+  //selectorNodes =
+  //  [{sel:'b', typ:0},{}]
+  //
   // TODO remove this.state.data
-  getInitialState: function() {
-    var selectorSpanNodes = this.props.setValue.map(function(ss) {
+  transformParseValue: function(arrSelTyp) {
+    var selectorSpanNodes = arrSelTyp.map(function(ss) {
       var sel = ss.selector.split(''),
           typ = ss.type,
           nodes = {
@@ -131,12 +213,25 @@ var CustomInput = React.createClass({
         selectorNodes.push(obj);
       }
     }
+    return selectorNodes
+  },
+  specTableIndex: function() {
+    return this.props.tabindex
+  },
+  specTable: function() {
+    return document.getElementsByClassName('action-event')[this.specTableIndex()]
+  },
+  currentTextBox: function() {
+    return this.specTable().getElementsByClassName('text-box')[0]
+  },
+  getInitialState: function() {
+    var selectorNodes = this.transformParseValue(this.props.setValue);
     return {
       data: selectorNodes
     }
   },
   componentDidMount: function() {
-    var textBox = document.getElementsByClassName('text-box')[0];
+    var textBox = this.currentTextBox();
     textBox.addEventListener('keydown', this.handleKeyDown, true);
     textBox.addEventListener('blur', this.focusOut, true);
     this.state.data.push({sel: ' ', typ: 0});
@@ -163,7 +258,7 @@ var CustomInput = React.createClass({
 //    spanArray[this.state.index].className += " cursor";
   },
   handleKeyDown: function(e) {
-    var spanArray = document.getElementsByClassName('text-box')[0].childNodes;
+    var spanArray = this.specTable().getElementsByClassName('text-box')[0].childNodes;
     var keyCode = e.keyCode;
 
     var keyValue = null;
@@ -272,7 +367,7 @@ var CustomInput = React.createClass({
       this.state.index++;
     }
     this.props.onChange(this.state.raw.join(''));
-    var spanArray = document.getElementsByClassName('text-box')[0].childNodes;
+    var spanArray = this.specTable().getElementsByClassName('text-box')[0].childNodes;
     for (var i=0; i<spanArray.length; i++) {
       spanArray[i].className = spanArray[i].className.replace(' cursor','');
     }
@@ -280,27 +375,7 @@ var CustomInput = React.createClass({
     this.forceUpdate();
   },
   render: function() {
-    var selectorSpanNodes = this.props.setValue.map(function(ss) {
-      var sel = ss.selector.split(''),
-          typ = ss.type,
-          nodes = {
-            sel,
-            typ
-          };
-      return nodes;
-    });
-    var selectorNodes = [];
-    for (var k=0;k<selectorSpanNodes.length;k++) {
-      for (var i=0;i<selectorSpanNodes[k].sel.length;i++) {
-        var sel = selectorSpanNodes[k].sel[i],
-            typ = selectorSpanNodes[k].typ,
-            obj = {
-              sel,
-              typ
-            };
-        selectorNodes.push(obj);
-      }
-    }
+    var selectorNodes = this.transformParseValue(this.props.setValue);
     var CharacterNodes = selectorNodes.map(function(c) {
       var className = 'type-' + c.typ;
       return (
@@ -308,7 +383,7 @@ var CustomInput = React.createClass({
       )
     });
     return (
-      <div className="text-box" tabIndex="0" onClick={this.focusEl}>
+      <div className="text-box" tabIndex={this.specTableIndex()} onClick={this.focusEl}>
         {CharacterNodes}
       </div>
     );
@@ -317,6 +392,16 @@ var CustomInput = React.createClass({
 
 
 var SpecifictyTable = React.createClass({
+//<SpecifictyTable
+//  onInput={d.handleInput}
+//  onDup={d.handleDup}
+//  onRemove={d.handleRemove}
+//  handleFocus={d.handleFocus}
+//  tabindex={d.tabindex}
+//  id={d.id}
+//  key={d.id}
+//  data={d.parse}
+///>
   handleInput: function(selector) {
     this.props.onInput(selector, this.props.id);
   },
@@ -333,7 +418,7 @@ var SpecifictyTable = React.createClass({
     return (
       <div className="action-event">
         <div className="content-box active">
-          <TextField data={this.props.data} handleFocus={this.handleFocus} onInput={this.handleInput}/>
+          <TextField data={this.props.data} handleFocus={this.handleFocus} tabindex={this.props.tabindex} onInput={this.handleInput}/>
           <ListBox data={this.props.data}/>
           <Extras onDup={this.handleDup} onRemove={this.handleRemove}/>
         </div>
@@ -352,33 +437,47 @@ var Specificty = React.createClass({
           handleDup: this.handleDup,
           handleRemove: this.handleRemove,
           handleFocus: this.handleFocus,
+          tabindex: 0,
           parse: parser('button .btn.btn-primary[data-select="link"] button#btn1:hover > span::first-letter#abc:hover::first-line')
         }
       ]
     };
   },
+  specTableArr: function() {
+    return this.state.data
+  },
+  specTableIndex: function(id) {
+    return this.specTableArr().map(function(d){return d.id}).indexOf(id)
+  },
   // TODO change forceUpdate() to setState
   handleInput: function(selector, id) {
-    var index = this.state.data.map(function(d){return d.id}).indexOf(id);
-    this.state.data[index].parse = parser(selector);
+    var specTable = this.specTableArr()[this.specTableIndex(id)];
+    specTable.parse = parser(selector);
     this.forceUpdate();
   },
   handleDup: function(id, data) {
-    var index = this.state.data.map(function(d){return d.id}).indexOf(id) + 1;
-    this.state.data.splice(index, 0, {id: Math.random(), handleInput: this.handleInput, handleDup: this.handleDup, handleRemove: this.handleRemove, handleFocus: this.handleFocus, parse: data});
+    var nextSpecTableIndex = this.specTableIndex(id) + 1;
+    this.specTableArr().splice(nextSpecTableIndex, 0, {
+      id: Math.random(),
+      handleInput: this.handleInput,
+      handleDup: this.handleDup,
+      handleRemove: this.handleRemove,
+      handleFocus: this.handleFocus,
+      tabindex: nextSpecTableIndex,
+      parse: data
+    });
     // TODO change the random number generate system
     // this.forceUpdate() alternate for this.setState, rerender
     this.forceUpdate();
   },
   handleRemove: function(id) {
-    var index = this.state.data.map(function(d){return d.id}).indexOf(id);
-    if (index > -1) {
-      this.state.data.splice(index, 1);
+    if (this.specTableIndex(id) > -1) {
+      this.specTableArr().splice(this.specTableIndex(id), 1);
     }
     this.forceUpdate();
   },
   handleSort: function() {
-    this.state.data.sort(function(a, b) {
+    this.specTableArr().sort(function(a, b) {
       var specA = a.parse.types[0].length + a.parse.types[1].length * 1000 + a.parse.types[2].length * 1000000
         , specB = b.parse.types[0].length + b.parse.types[1].length * 1000 + b.parse.types[2].length * 1000000;
 
@@ -387,16 +486,16 @@ var Specificty = React.createClass({
     this.forceUpdate();
   },
   handleFocus: function(id) {
-    var index = this.state.data.map(function(d){return d.id}).indexOf(id);
-    document.getElementsByClassName('action-event')[index].getElementsByClassName('text-box')[0].focus();
-    console.log(document.getElementsByClassName('action-event')[index].getElementsByClassName('text-box')[0]);
+    var clickedSpecTable = document.getElementsByClassName('action-event')[this.specTableIndex(id)];
+    var focusedTextBox = clickedSpecTable.getElementsByClassName('text-box')[0];
+    focusedTextBox.focus();
 //    var spanArray = textBox.childNodes;
 //    spanArray[this.state.index].className += " cursor";
   },
   render: function() {
-    var SpecifictyNodes = this.state.data.map(function(d) {
+    var SpecifictyNodes = this.specTableArr().map(function(d) {
       return (
-        <SpecifictyTable onInput={d.handleInput} onDup={d.handleDup} onRemove={d.handleRemove} handleFocus={d.handleFocus} id={d.id} key={d.id} data={d.parse}/>
+        <SpecifictyTable onInput={d.handleInput} onDup={d.handleDup} onRemove={d.handleRemove} handleFocus={d.handleFocus} tabindex={d.tabindex} id={d.id} key={d.id} data={d.parse}/>
       );
     });
     return (
