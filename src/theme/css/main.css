@@ -30,6 +30,7 @@
   border-radius: 2px;
   box-shadow: 0 0 5px #888888;
   font-family: Roboto;
+  z-index: 1;
 }
 .content-box .text-field {
   padding: 2px;
@@ -87,33 +88,34 @@
 .content-box .list-box .table-cell:first-child {
   border-left: 0;
 }
-.content-box .extras {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  opacity: 0;
-  z-index: -1;
-  width: 100%;
-}
-.content-box .extras .extra-left {
-  float: left;
-}
-.content-box .extras .extra-right {
-  float: right;
-}
-.content-box .extra-left,
-.content-box .extra-right {
-  transition: all 0.3s ease;
-}
-.content-box:hover .extras {
-  opacity: 1;
+.action-event {
+  position: relative;
   z-index: 0;
 }
-.content-box:hover .extra-left {
+.action-event .extras {
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
+  opacity: 0;
+  width: 100%;
+}
+.action-event .extras .extra-left {
+  float: left;
+}
+.action-event .extras .extra-right {
+  float: right;
+}
+.action-event .extra-left,
+.action-event .extra-right {
+  transition: all 0.3s ease;
+}
+.action-event:hover .extras {
+  opacity: 1;
+}
+.action-event:hover .extra-left {
   margin-left: -30px;
 }
-.content-box:hover .extra-right {
+.action-event:hover .extra-right {
   margin-right: -30px;
 }
 .type-0 {

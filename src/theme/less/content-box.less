@@ -33,6 +33,7 @@
   border-radius: 2px;
   box-shadow: 0 0 5px #888888;
   font-family: Roboto;
+  z-index: 1;
 
   .text-field {
     padding: 2px;
@@ -103,12 +104,15 @@
       }
     }
   }
+}
+.action-event {
+  position: relative;
+  z-index: 0;
 
   .extras {
     position: absolute;
-    left: 50%;
     top: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(0, -50%);
     opacity: 0;
     width: 100%;
 
@@ -139,7 +143,6 @@
     }
   }
 }
-
 
 .type-0 {
   background-color: @green;
