@@ -388,8 +388,8 @@ var Specificty = React.createClass({
   },
   handleFocus: function(id) {
     var index = this.state.data.map(function(d){return d.id}).indexOf(id);
-    document.getElementsByClassName('main-content')[0].getElementsByClassName('text-box')[index].focus();
-    console.log(document.getElementsByClassName('main-content')[0].getElementsByClassName('text-box')[index]);
+    document.getElementsByClassName('action-event')[index].getElementsByClassName('text-box')[0].focus();
+    console.log(document.getElementsByClassName('action-event')[index].getElementsByClassName('text-box')[0]);
 //    var spanArray = textBox.childNodes;
 //    spanArray[this.state.index].className += " cursor";
   },
