@@ -13,19 +13,6 @@ var Extras = React.createClass({
   }
 });
 
-var SelectorSpan = React.createClass({
-  render: function() {
-    var className;
-    className = 'type-' + this.props.type;
-
-    return (
-      <span className={className}>
-        {this.props.children}
-      </span>
-    );
-  }
-});
-
 var TextField = React.createClass({
   handleChange: function(value) {
     // e.target.value will be value gotten from custominput
@@ -34,33 +21,9 @@ var TextField = React.createClass({
 
   render: function() {
     // structure the props.data.segments data into each letter with types
-    var valueSpan = this.props.data.raw.split('');
-    var selectorSpanNodes = this.props.data.segments.map(function(ss) {
-      var sel = ss.selector.split(''),
-          typ = ss.type,
-          nodes = {
-            sel,
-            typ
-          };
-      return nodes;
-    });
-    var selectorNodes = [];
-    for (var k=0;k<selectorSpanNodes.length;k++) {
-      for (var i=0;i<selectorSpanNodes[k].sel.length;i++) {
-        var sel = selectorSpanNodes[k].sel[i],
-            typ = selectorSpanNodes[k].typ,
-            obj = {
-              sel,
-              typ
-            };
-        selectorNodes.push(obj);
-      }
-    }
-    console.log(selectorNodes);
-    console.log(valueSpan);
     return (
       <div className="text-field">
-        <CustomInput className="event-capture" setValue={valueSpan} onChange={this.handleChange} />
+        <CustomInput className="event-capture" setValue={this.props.data.segments} onChange={this.handleChange} />
       </div>
     );
   }
@@ -96,17 +59,11 @@ var ListBox = React.createClass({
 });
 
 var SpecifictyTable = React.createClass({
-  getInitialState: function() {
-    return {
-      data: this.props.data
-    }
-  },
   handleInput: function(selector) {
     this.props.onInput(selector, this.props.id);
   },
   handleDup: function() {
     this.props.onDup(this.props.id, this.props.data);
-    console.log(this.props);
   },
   handleRemove: function() {
     this.props.onRemove(this.props.id);
@@ -137,7 +94,7 @@ var Specificty = React.createClass({
     };
   },
   // TODO change forceUpdate() to setState
-  handleInput: function(selector, id, data) {
+  handleInput: function(selector, id) {
     var index = this.state.data.map(function(d){return d.id}).indexOf(id);
     this.state.data[index].parse = parser(selector);
     this.forceUpdate();
@@ -182,16 +139,41 @@ var Specificty = React.createClass({
 
 var CustomInput = React.createClass({
   getInitialState: function() {
+    var selectorSpanNodes = this.props.setValue.map(function(ss) {
+      var sel = ss.selector.split(''),
+          typ = ss.type,
+          nodes = {
+            sel,
+            typ
+          };
+      return nodes;
+    });
+    var selectorNodes = [];
+    for (var k=0;k<selectorSpanNodes.length;k++) {
+      for (var i=0;i<selectorSpanNodes[k].sel.length;i++) {
+        var sel = selectorSpanNodes[k].sel[i],
+            typ = selectorSpanNodes[k].typ,
+            obj = {
+              sel,
+              typ
+            };
+        selectorNodes.push(obj);
+      }
+    }
     return {
-      data: this.props.setValue
+      data: selectorNodes
     }
   },
   componentDidMount: function() {
     var textBox = document.getElementsByClassName('text-box')[0];
     textBox.addEventListener('keydown', this.handleKeyDown, true);
-    textBox.addEventListener('blur', this.focusOut, true);
-    this.state.data.push(' ');
+    //textBox.addEventListener('blur', this.focusOut, true);
+    this.state.data.push({sel: ' ', typ: 0});
     this.state.index = this.state.data.length - 1;
+    this.state.raw = this.state.data.map(function(d) {
+      return d.sel
+    });
+    // FIXME
     this.forceUpdate();
   },
   focusOut: function() {
@@ -282,7 +264,7 @@ var CustomInput = React.createClass({
       e.preventDefault();
       // Cant backspace if index <= 0
       if (this.state.index > 0) {
-        this.state.data.splice(this.state.index-1, 1);
+        this.state.raw.splice(this.state.index-1, 1);
         this.state.index--;
       }
     } else if (keyCode == 46) {
@@ -290,7 +272,7 @@ var CustomInput = React.createClass({
       e.preventDefault();
       // Cant delete if index > length
       if (this.state.index < this.state.data.length-1) {
-        this.state.data.splice(this.state.index, 1);
+        this.state.raw.splice(this.state.index, 1);
       }
     } else if (keyCode == 37) {
       // arrowleft
@@ -313,20 +295,43 @@ var CustomInput = React.createClass({
     }
 
     if (keyValue) {
-      this.state.data.splice(this.state.index, 0, keyValue);
+      this.state.raw.splice(this.state.index, 0, keyValue);
       this.state.index++;
     }
+//    for (var i=0; i<spanArray.length; i++) {
+//      spanArray[i].style.background= "none";
+//    }
+    //spanArray.item(this.state.index).style.backgroundColor = "red";
+    this.props.onChange(this.state.raw.join(''));
     this.forceUpdate();
-    for (var i=0; i<spanArray.length; i++) {
-      spanArray[i].style.background= "none";
-    }
-    spanArray.item(this.state.index).style.backgroundColor = "red";
-    this.props.onChange(this.state.data.join(''));
   },
   render: function() {
-    var CharacterNodes = this.state.data.map(function(c) {
+    console.log(this.props.setValue);
+    var selectorSpanNodes = this.props.setValue.map(function(ss) {
+      var sel = ss.selector.split(''),
+          typ = ss.type,
+          nodes = {
+            sel,
+            typ
+          };
+      return nodes;
+    });
+    var selectorNodes = [];
+    for (var k=0;k<selectorSpanNodes.length;k++) {
+      for (var i=0;i<selectorSpanNodes[k].sel.length;i++) {
+        var sel = selectorSpanNodes[k].sel[i],
+            typ = selectorSpanNodes[k].typ,
+            obj = {
+              sel,
+              typ
+            };
+        selectorNodes.push(obj);
+      }
+    }
+    var CharacterNodes = selectorNodes.map(function(c) {
+      var className = 'type-' + c.typ;
       return (
-        <span>{c}</span>
+        <span className={className}>{c.sel}</span>
       )
     });
     return (
