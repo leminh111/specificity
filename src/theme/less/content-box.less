@@ -19,6 +19,9 @@
     transform: scale(1);
   }
 }
+body {
+  overflow: hidden;
+}
 
 .active {
   -webkit-animation: fadeIn 0.5s;
@@ -39,6 +42,12 @@
     padding: 2px;
     background-color: @dark-purple;
 
+    .text-box:after {
+      display: block;
+      content: "";
+      clear: both;
+    }
+
     &:after {
       display: block;
       clear: both;
@@ -55,6 +64,7 @@
 
     span {
       font-size: 28px;
+      display: block;
       float: left;
     }
   }

@@ -18,6 +18,9 @@
     transform: scale(1);
   }
 }
+body {
+  overflow: hidden;
+}
 .active {
   -webkit-animation: fadeIn 0.5s;
   animation: fadeIn 0.5s;
@@ -36,6 +39,11 @@
   padding: 2px;
   background-color: #002B36;
 }
+.content-box .text-field .text-box:after {
+  display: block;
+  content: "";
+  clear: both;
+}
 .content-box .text-field:after {
   display: block;
   clear: both;
@@ -50,6 +58,7 @@
 }
 .content-box .text-field span {
   font-size: 28px;
+  display: block;
   float: left;
 }
 .content-box .list-box {

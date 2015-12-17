@@ -191,7 +191,7 @@ var CustomInput = React.createClass({
 
 
   // CustomInput:
-  // this.state.data: [       Obj     ,Obj]
+  // arrSelTyp: [       Obj     ,Obj]
   //                  [{sel:'b',typ:0}]
   //
   // this.state.raw:  [str,str]
@@ -258,11 +258,45 @@ var CustomInput = React.createClass({
       // delete class 'cursor' on every span of char
       spanArray[i].className = spanArray[i].className.replace(' cursor','');
     }
+    // onfocusOut, delete the invicible space if there is any
+    if (this.state.raw[this.state.raw.length-1] == ' ') {
+      this.state.raw.pop();
+    }
+    // if index is at the invicible space then move it back 1 index
+    if (this.state.index == this.state.raw.length) {
+      this.state.index--;
+    }
+    // parse the new raw to re-render
     this.props.onChange(this.state.raw.join(''));
   },
-  focusEl: function() {
+  focusEl: function(e) {
+    //this.specTableArr().map(function(d){return d.id}).indexOf(id)
     var spanArray = this.currentTextBox().childNodes;
-    spanArray[this.state.index].className += " cursor";
+    // Find span index
+    var idArr = [];
+    for (var i=0; i<spanArray.length; i++) {
+      idArr.push(spanArray[i].id);
+    }
+    var spanIndex = idArr.indexOf(e.target.id);
+
+    var oldLength = this.currentTextBox().childNodes.length;
+    // only add the invicible space if there's no space already
+    if (this.state.raw[oldLength-1] != ' ') {
+    // onfocus add the invicible space at the end
+      this.state.raw.push(' ');
+      this.props.onChange(this.state.raw.join(''));
+    }
+    // delete class 'cursor' on every span of char
+    for (var i=0; i<spanArray.length; i++) {
+      spanArray[i].className = spanArray[i].className.replace(' cursor','');
+    }
+    // show cursor
+    this.state.index = spanIndex;
+    spanArray[spanIndex].className += ' cursor';
+  },
+  randomId: function() {
+    var a = Math.random();
+    return a
   },
   handleKeyDown: function(e) {
     var spanArray = this.currentTextBox().childNodes;
@@ -389,15 +423,16 @@ var CustomInput = React.createClass({
     this.forceUpdate();
   },
   render: function() {
+    var self = this;
     var selectorNodes = this.transformParseValue(this.props.setValue);
     var CharacterNodes = selectorNodes.map(function(c) {
       var className = 'type-' + c.typ;
       return (
-        <span className={className}>{c.sel}</span>
+        <span className={className} id={self.randomId()} onClick={self.focusEl}>{c.sel}</span>
       )
     });
     return (
-      <div className="text-box" tabIndex={this.specTableIndex()} onClick={this.focusEl}>
+      <div className="text-box" tabIndex={this.specTableIndex()} >
         {CharacterNodes}
       </div>
     );
