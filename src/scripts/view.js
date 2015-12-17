@@ -251,6 +251,10 @@ var CustomInput = React.createClass({
     var textBox = this.currentTextBox();
     textBox.addEventListener('keydown', this.handleKeyDown, true);
     textBox.addEventListener('blur', this.focusOut, true);
+    if (this.state.raw[this.state.raw.length-1] != ' ') {
+      this.state.raw.push(' ');
+      this.props.onChange(this.state.raw.join(''));
+    }
   },
   focusOut: function() {
     var spanArray = this.currentTextBox().childNodes;
@@ -258,16 +262,16 @@ var CustomInput = React.createClass({
       // delete class 'cursor' on every span of char
       spanArray[i].className = spanArray[i].className.replace(' cursor','');
     }
-    // onfocusOut, delete the invicible space if there is any
-    if (this.state.raw[this.state.raw.length-1] == ' ') {
-      this.state.raw.pop();
-    }
-    // if index is at the invicible space then move it back 1 index
-    if (this.state.index == this.state.raw.length) {
-      this.state.index--;
-    }
-    // parse the new raw to re-render
-    this.props.onChange(this.state.raw.join(''));
+//    // onfocusOut, delete the invicible space if there is any
+//    if (this.state.raw[this.state.raw.length-1] == ' ') {
+//      this.state.raw.pop();
+//    }
+//    // if index is at the invicible space then move it back 1 index
+//    if (this.state.index == this.state.raw.length) {
+//      this.state.index--;
+//    }
+//    // parse the new raw to re-render
+//    this.props.onChange(this.state.raw.join(''));
   },
   focusEl: function(e) {
     //this.specTableArr().map(function(d){return d.id}).indexOf(id)
@@ -280,25 +284,36 @@ var CustomInput = React.createClass({
     var spanIndex = idArr.indexOf(e.target.id);
 
     var oldLength = this.currentTextBox().childNodes.length;
-    // only add the invicible space if there's no space already
-    if (this.state.raw[oldLength-1] != ' ') {
-    // onfocus add the invicible space at the end
-      this.state.raw.push(' ');
-      this.props.onChange(this.state.raw.join(''));
-    }
+//    // only add the invicible space if there's no space already
+//    if (this.state.raw[oldLength-1] != ' ') {
+//    // onfocus add the invicible space at the end
+//      this.state.raw.push(' ');
+//      this.props.onChange(this.state.raw.join(''));
+//    }
     // delete class 'cursor' on every span of char
     for (var i=0; i<spanArray.length; i++) {
       spanArray[i].className = spanArray[i].className.replace(' cursor','');
     }
     // show cursor
-    this.state.index = spanIndex;
-    spanArray[spanIndex].className += ' cursor';
+
+    // if user click on characters' span
+    if (e.target.id) {
+      this.state.index = spanIndex;
+      spanArray[spanIndex].className += ' cursor';
+    } else {
+    // if user click on the empty space of the textbox
+      this.state.index = spanArray.length - 1;
+      spanArray[this.state.index].className += ' cursor';
+    }
   },
   randomId: function() {
-    var a = Math.random();
-    return a
+    return Math.random();
   },
   handleKeyDown: function(e) {
+    // Prevent keys like home, end, space, arrowkey
+    // move the document
+    e.preventDefault();
+
     var spanArray = this.currentTextBox().childNodes;
     var keyCode = e.keyCode;
 
@@ -432,7 +447,7 @@ var CustomInput = React.createClass({
       )
     });
     return (
-      <div className="text-box" tabIndex={this.specTableIndex()} >
+      <div className="text-box" tabIndex={this.specTableIndex()} onClick={this.focusEl}>
         {CharacterNodes}
       </div>
     );

@@ -13,10 +13,11 @@ module.exports = function parser(selector) {
   var rgxClasses = '(\\.[a-zA-Z0-9-_]+)',
       rgxIds = '(#[a-zA-Z0-9-_]+)',
       rgxPseuClasses = '(\\:[a-zA-Z0-9-_]+)',
-      rgxEl = '(^[a-zA-Z0-9-_]+)|((\\s)([a-zA-Z0-9-_]+))',
+      // FIXME rgxEl
+      rgxEl = '(^[a-zA-Z0-9-_]+)|(([\\s>~=])([a-zA-Z0-9-_]+))',
       rgxPseuEl = '(\\:\\:[a-zA-Z0-9-_]+)',
       rgxAttr = '(\\[[^>:#.\\s]+\\])',
-      rgxNone = '(\\s)|(>)|(~)|(\\:)|(#)|(\\.)|(.+\\])|(\\[.+(?!\\]))',
+      rgxNone = '(\\s)|(>)|(~)|(\\:)|(#)|(\\.)|(.+\\])|(\\[.+(?!\\]))|(=)',
 
       rgxTotal = rgxClasses + '|' + rgxIds + '|' + rgxPseuClasses + '|' + rgxEl + '|' + rgxPseuEl + '|' + rgxAttr + '|' + rgxNone;
 
@@ -37,7 +38,7 @@ module.exports = function parser(selector) {
   while (matched = rex.exec(selector)) {
     var matchedSelector = matched[0].toString();
     if (rexType0.exec(matchedSelector)) {
-      // Check if this is the El with space at the beginning
+      // Check if this is the El with space,>~or= at the beginning
       // then add the space to the type none and push to the segment
       if (matched[6]){
         var objSpace = createSegment(matched[6].toString(), 'none');
