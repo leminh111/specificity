@@ -101,6 +101,8 @@ var TextField = React.createClass({
 //<TextField
 //  data={this.props.data}
 //  handleFocus={this.handleFocus}
+//  specTableIndex={this.specTableIndex}
+//  id={this.props.id}
 //  tabindex={this.props.tabindex}
 //  onInput={this.handleInput}
 ///>
@@ -117,7 +119,7 @@ var TextField = React.createClass({
     // structure the props.data.segments data into each letter with types
     return (
       <div className="text-field">
-        <CustomInput className="event-capture" handleFocus={this.props.handleFocus} tabindex={this.props.tabindex} setValue={this.props.data.segments} onChange={this.handleChange} />
+        <CustomInput className="event-capture" handleFocus={this.props.handleFocus} specTableIndex={this.props.specTableIndex} id={this.props.id} tabindex={this.props.tabindex} setValue={this.props.data.segments} onChange={this.handleChange} />
       </div>
     );
   }
@@ -180,6 +182,8 @@ var CustomInput = React.createClass({
   //}
 //<CustomInput className="event-capture"
 //  handleFocus={this.props.handleFocus}
+//  specTableIndex={this.props.specTableIndex}
+//  id={this.props.id}
 //  tabindex={this.props.tabindex}
 //  setValue={this.props.data.segments}
 //  onChange={this.handleChange}
@@ -230,7 +234,7 @@ var CustomInput = React.createClass({
     return selectorNodes
   },
   specTableIndex: function() {
-    return this.props.tabindex
+    return this.props.specTableIndex(this.props.id)
   },
   specTable: function() {
     return document.getElementsByClassName('action-event')[this.specTableIndex()]
@@ -413,6 +417,7 @@ var SpecifictyTable = React.createClass({
 //  onDup={d.handleDup}
 //  onRemove={d.handleRemove}
 //  handleFocus={d.handleFocus}
+//  specTableIndex={d.specTableIndex}
 //  tabindex={d.tabindex}
 //  id={d.id}
 //  key={d.id}
@@ -434,7 +439,7 @@ var SpecifictyTable = React.createClass({
     return (
       <div className="action-event">
         <div className="content-box active">
-          <TextField data={this.props.data} handleFocus={this.handleFocus} tabindex={this.props.tabindex} onInput={this.handleInput}/>
+          <TextField data={this.props.data} handleFocus={this.handleFocus} specTableIndex={this.props.specTableIndex} id={this.props.id} tabindex={this.props.tabindex} onInput={this.handleInput}/>
           <ListBox data={this.props.data}/>
           <Extras onDup={this.handleDup} onRemove={this.handleRemove}/>
         </div>
@@ -453,6 +458,7 @@ var Specificty = React.createClass({
           handleDup: this.handleDup,
           handleRemove: this.handleRemove,
           handleFocus: this.handleFocus,
+          specTableIndex: this.specTableIndex,
           tabindex: 0,
           parse: parser('button .btn.btn-primary[data-select="link"] button#btn1:hover > span::first-letter#abc:hover::first-line')
         }
@@ -472,14 +478,15 @@ var Specificty = React.createClass({
     this.forceUpdate();
   },
   handleDup: function(id, data) {
-    var nextSpecTableIndex = this.specTableIndex(id) + 1;
-    this.specTableArr().splice(nextSpecTableIndex, 0, {
+    var nextSpecTabIndex = this.specTableIndex(id) + 1;
+    this.specTableArr().splice(nextSpecTabIndex, 0, {
       id: Math.random(),
       handleInput: this.handleInput,
       handleDup: this.handleDup,
       handleRemove: this.handleRemove,
       handleFocus: this.handleFocus,
-      tabindex: nextSpecTableIndex,
+      specTableIndex: this.specTableIndex,
+      tabindex: nextSpecTabIndex,
       parse: data
     });
     // TODO change the random number generate system
@@ -511,7 +518,7 @@ var Specificty = React.createClass({
   render: function() {
     var SpecifictyNodes = this.specTableArr().map(function(d) {
       return (
-        <SpecifictyTable onInput={d.handleInput} onDup={d.handleDup} onRemove={d.handleRemove} handleFocus={d.handleFocus} tabindex={d.tabindex} id={d.id} key={d.id} data={d.parse}/>
+        <SpecifictyTable onInput={d.handleInput} onDup={d.handleDup} onRemove={d.handleRemove} specTableIndex={d.specTableIndex} handleFocus={d.handleFocus} tabindex={d.tabindex} id={d.id} key={d.id} data={d.parse}/>
       );
     });
     return (
