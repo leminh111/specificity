@@ -9,7 +9,6 @@
 //  onInput={d.handleInput}
 //  onDup={d.handleDup}
 //  onRemove={d.handleRemove}
-//  handleFocus={d.handleFocus}
 //  tabindex={d.tabindex}
 //  id={d.id}
 //  key={d.id}
@@ -17,7 +16,6 @@
 ///>
 //<TextField
 //  data={this.props.data}
-//  handleFocus={this.handleFocus}
 //  tabindex={this.props.tabindex}
 //  onInput={this.handleInput}
 ///>
@@ -29,7 +27,6 @@
 //  onRemove={this.handleRemove}
 ///>
 //<CustomInput className="event-capture"
-//  handleFocus={this.props.handleFocus}
 //  tabindex={this.props.tabindex}
 //  setValue={this.props.data.segments}
 //  onChange={this.handleChange}
@@ -100,7 +97,6 @@ var Extras = React.createClass({
 var TextField = React.createClass({
 //<TextField
 //  data={this.props.data}
-//  handleFocus={this.handleFocus}
 //  specTableIndex={this.specTableIndex}
 //  id={this.props.id}
 //  tabindex={this.props.tabindex}
@@ -119,7 +115,7 @@ var TextField = React.createClass({
     // structure the props.data.segments data into each letter with types
     return (
       <div className="text-field">
-        <CustomInput className="event-capture" handleFocus={this.props.handleFocus} specTableIndex={this.props.specTableIndex} id={this.props.id} tabindex={this.props.tabindex} setValue={this.props.data.segments} onChange={this.handleChange} />
+        <CustomInput className="event-capture" specTableIndex={this.props.specTableIndex} id={this.props.id} tabindex={this.props.tabindex} setValue={this.props.data.segments} onChange={this.handleChange} />
       </div>
     );
   }
@@ -172,7 +168,6 @@ var ListBox = React.createClass({
 var CustomInput = React.createClass({
 //<TextField
 //  data={this.props.data}
-//  handleFocus={this.handleFocus}
 //  tabindex={this.props.tabindex}
 //  onInput={this.handleInput}
 ///>
@@ -181,7 +176,6 @@ var CustomInput = React.createClass({
   //  eg: Obj = {selector: "button", type: "none"}
   //}
 //<CustomInput className="event-capture"
-//  handleFocus={this.props.handleFocus}
 //  specTableIndex={this.props.specTableIndex}
 //  id={this.props.id}
 //  tabindex={this.props.tabindex}
@@ -416,7 +410,6 @@ var SpecifictyTable = React.createClass({
 //  onInput={d.handleInput}
 //  onDup={d.handleDup}
 //  onRemove={d.handleRemove}
-//  handleFocus={d.handleFocus}
 //  specTableIndex={d.specTableIndex}
 //  tabindex={d.tabindex}
 //  id={d.id}
@@ -432,14 +425,11 @@ var SpecifictyTable = React.createClass({
   handleRemove: function() {
     this.props.onRemove(this.props.id);
   },
-  handleFocus: function() {
-    this.props.handleFocus(this.props.id);
-  },
   render: function() {
     return (
       <div className="action-event">
         <div className="content-box active">
-          <TextField data={this.props.data} handleFocus={this.handleFocus} specTableIndex={this.props.specTableIndex} id={this.props.id} tabindex={this.props.tabindex} onInput={this.handleInput}/>
+          <TextField data={this.props.data} specTableIndex={this.props.specTableIndex} id={this.props.id} tabindex={this.props.tabindex} onInput={this.handleInput}/>
           <ListBox data={this.props.data}/>
           <Extras onDup={this.handleDup} onRemove={this.handleRemove}/>
         </div>
@@ -457,7 +447,6 @@ var Specificty = React.createClass({
           handleInput: this.handleInput,
           handleDup: this.handleDup,
           handleRemove: this.handleRemove,
-          handleFocus: this.handleFocus,
           specTableIndex: this.specTableIndex,
           tabindex: 0,
           parse: parser('button .btn.btn-primary[data-select="link"] button#btn1:hover > span::first-letter#abc:hover::first-line')
@@ -484,7 +473,6 @@ var Specificty = React.createClass({
       handleInput: this.handleInput,
       handleDup: this.handleDup,
       handleRemove: this.handleRemove,
-      handleFocus: this.handleFocus,
       specTableIndex: this.specTableIndex,
       tabindex: nextSpecTabIndex,
       parse: data
@@ -508,17 +496,10 @@ var Specificty = React.createClass({
     });
     this.forceUpdate();
   },
-  handleFocus: function(id) {
-    var clickedSpecTable = document.getElementsByClassName('action-event')[this.specTableIndex(id)];
-    var focusedTextBox = clickedSpecTable.getElementsByClassName('text-box')[0];
-    focusedTextBox.focus();
-//    var spanArray = textBox.childNodes;
-//    spanArray[this.state.index].className += " cursor";
-  },
   render: function() {
     var SpecifictyNodes = this.specTableArr().map(function(d) {
       return (
-        <SpecifictyTable onInput={d.handleInput} onDup={d.handleDup} onRemove={d.handleRemove} specTableIndex={d.specTableIndex} handleFocus={d.handleFocus} tabindex={d.tabindex} id={d.id} key={d.id} data={d.parse}/>
+        <SpecifictyTable onInput={d.handleInput} onDup={d.handleDup} onRemove={d.handleRemove} specTableIndex={d.specTableIndex} tabindex={d.tabindex} id={d.id} key={d.id} data={d.parse}/>
       );
     });
     return (
