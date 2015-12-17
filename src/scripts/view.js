@@ -1,3 +1,10 @@
+    // TODO ctrl c,v,y,z
+//
+//
+//
+//
+//
+//
 //<Spec>
   //<SpecTab>
     //<Text>
@@ -303,7 +310,6 @@ var CustomInput = React.createClass({
     var spanArray = this.currentTextBox().childNodes;
     var keyCode = e.keyCode;
 
-    // TODO ctrl c,v,y,z
     // Just mapping key
     var keyValue = null;
     if(keyCode <= 90 && keyCode >= 65) {
