@@ -191,8 +191,8 @@ var CustomInput = React.createClass({
 
 
   // CustomInput:
-  // arrSelTyp: [       Obj     ,Obj]
-  //                  [{sel:'b',typ:0}]
+  // arrSelTyp: [      Obj    ,Obj]
+  //            [{sel:'button',typ:0}]
   //
   // this.state.raw:  [str,str]
   //                  ['b','u']
@@ -218,9 +218,11 @@ var CustomInput = React.createClass({
       for (var i=0;i<selectorSpanNodes[k].sel.length;i++) {
         var sel = selectorSpanNodes[k].sel[i],
             typ = selectorSpanNodes[k].typ,
+            id  = Math.random(),
             obj = {
               sel,
-              typ
+              typ,
+              id
             };
         selectorNodes.push(obj);
       }
@@ -262,16 +264,6 @@ var CustomInput = React.createClass({
       // delete class 'cursor' on every span of char
       spanArray[i].className = spanArray[i].className.replace(' cursor','');
     }
-//    // onfocusOut, delete the invicible space if there is any
-//    if (this.state.raw[this.state.raw.length-1] == ' ') {
-//      this.state.raw.pop();
-//    }
-//    // if index is at the invicible space then move it back 1 index
-//    if (this.state.index == this.state.raw.length) {
-//      this.state.index--;
-//    }
-//    // parse the new raw to re-render
-//    this.props.onChange(this.state.raw.join(''));
   },
   focusEl: function(e) {
     //this.specTableArr().map(function(d){return d.id}).indexOf(id)
@@ -284,12 +276,6 @@ var CustomInput = React.createClass({
     var spanIndex = idArr.indexOf(e.target.id);
 
     var oldLength = this.currentTextBox().childNodes.length;
-//    // only add the invicible space if there's no space already
-//    if (this.state.raw[oldLength-1] != ' ') {
-//    // onfocus add the invicible space at the end
-//      this.state.raw.push(' ');
-//      this.props.onChange(this.state.raw.join(''));
-//    }
     // delete class 'cursor' on every span of char
     for (var i=0; i<spanArray.length; i++) {
       spanArray[i].className = spanArray[i].className.replace(' cursor','');
@@ -317,6 +303,7 @@ var CustomInput = React.createClass({
     var spanArray = this.currentTextBox().childNodes;
     var keyCode = e.keyCode;
 
+    // TODO ctrl c,v,y,z
     // Just mapping key
     var keyValue = null;
     if(keyCode <= 90 && keyCode >= 65) {
@@ -443,7 +430,7 @@ var CustomInput = React.createClass({
     var CharacterNodes = selectorNodes.map(function(c) {
       var className = 'type-' + c.typ;
       return (
-        <span className={className} id={self.randomId()} onClick={self.focusEl}>{c.sel}</span>
+        <span className={className} id={c.id} onClick={self.focusEl}>{c.sel}</span>
       )
     });
     return (
@@ -510,7 +497,6 @@ var Specificty = React.createClass({
   specTableIndex: function(id) {
     return this.specTableArr().map(function(d){return d.id}).indexOf(id)
   },
-  // TODO change forceUpdate() to setState
   handleInput: function(selector, id) {
     var specTable = this.specTableArr()[this.specTableIndex(id)];
     specTable.parse = parser(selector);
@@ -520,14 +506,9 @@ var Specificty = React.createClass({
     var nextSpecTabIndex = this.specTableIndex(id) + 1;
     this.specTableArr().splice(nextSpecTabIndex, 0, {
       id: Math.random(),
-      handleInput: this.handleInput,
-      handleDup: this.handleDup,
-      handleRemove: this.handleRemove,
-      specTableIndex: this.specTableIndex,
       tabindex: nextSpecTabIndex,
       parse: data
     });
-    // TODO change the random number generate system
     // this.forceUpdate() alternate for this.setState, rerender
     this.forceUpdate();
   },
@@ -547,9 +528,10 @@ var Specificty = React.createClass({
     this.forceUpdate();
   },
   render: function() {
+    var self = this;
     var SpecifictyNodes = this.specTableArr().map(function(d) {
       return (
-        <SpecifictyTable onInput={d.handleInput} onDup={d.handleDup} onRemove={d.handleRemove} specTableIndex={d.specTableIndex} tabindex={d.tabindex} id={d.id} key={d.id} data={d.parse}/>
+        <SpecifictyTable onInput={self.handleInput} onDup={self.handleDup} onRemove={self.handleRemove} specTableIndex={self.specTableIndex} tabindex={d.tabindex} id={d.id} key={d.id} data={d.parse}/>
       );
     });
     return (
