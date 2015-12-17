@@ -189,8 +189,22 @@ var CustomInput = React.createClass({
   //
   //selectorNodes =
   //  [{sel:'b', typ:0},{}]
+
+
+
+  // CustomInput:
+  // this.state.data: [       Obj     ,Obj]
+  //                  [{sel:'b',typ:0}]
   //
-  // TODO remove this.state.data
+  // this.state.raw:  [str,str]
+  //                  ['b','u']
+  //
+  // this.state.index: number
+  //                   104
+  //
+  //spanArray: [   Nodes   ,   Nodes   ]
+  //           [span.type-1,span.type-2]
+
   transformParseValue: function(arrSelTyp) {
     var selectorSpanNodes = arrSelTyp.map(function(ss) {
       var sel = ss.selector.split(''),
@@ -225,42 +239,38 @@ var CustomInput = React.createClass({
     return this.specTable().getElementsByClassName('text-box')[0]
   },
   getInitialState: function() {
-    var selectorNodes = this.transformParseValue(this.props.setValue);
+    var arrOfChar = this.transformParseValue(this.props.setValue);
+    var rawArr = arrOfChar.map(function(d) {
+      return d.sel
+    });
+    var index = rawArr.length - 1;
     return {
-      data: selectorNodes
+      raw: rawArr,
+      index: index
     }
   },
   componentDidMount: function() {
     var textBox = this.currentTextBox();
     textBox.addEventListener('keydown', this.handleKeyDown, true);
     textBox.addEventListener('blur', this.focusOut, true);
-    this.state.data.push({sel: ' ', typ: 0});
-    this.state.raw = this.state.data.map(function(d) {
-      return d.sel
-    });
-    this.state.index = this.state.raw.length - 1;
-    // FIXME
-    this.forceUpdate();
   },
   focusOut: function() {
-    var spanArray = document.getElementsByClassName('text-box')[0].childNodes;
+    var spanArray = this.currentTextBox().childNodes;
     for (var i=0; i<spanArray.length; i++) {
+      // delete class 'cursor' on every span of char
       spanArray[i].className = spanArray[i].className.replace(' cursor','');
     }
+    this.props.onChange(this.state.raw.join(''));
   },
   focusEl: function() {
-    this.props.handleFocus();
-//    var textBox = document.getElementsByClassName('text-box')[0];
-//    console.log(document.getElementsByClassName('text-box'));
-//    // DOMEl need tabIndex so that DOM can be focused
-//    textBox.focus();
-//    var spanArray = textBox.childNodes;
-//    spanArray[this.state.index].className += " cursor";
+    var spanArray = this.currentTextBox().childNodes;
+    spanArray[this.state.index].className += " cursor";
   },
   handleKeyDown: function(e) {
-    var spanArray = this.specTable().getElementsByClassName('text-box')[0].childNodes;
+    var spanArray = this.currentTextBox().childNodes;
     var keyCode = e.keyCode;
 
+    // Just mapping key
     var keyValue = null;
     if(keyCode <= 90 && keyCode >= 65) {
       // key for alphabet
@@ -361,13 +371,19 @@ var CustomInput = React.createClass({
         this.state.index = this.state.raw.length - 1;
       }
     }
+    // End of mapping
 
+    // If it's a legit keypress then add that key into input
     if (keyValue) {
       this.state.raw.splice(this.state.index, 0, keyValue);
       this.state.index++;
     }
+
+    // Everytime there's a change, update the parser
     this.props.onChange(this.state.raw.join(''));
-    var spanArray = this.specTable().getElementsByClassName('text-box')[0].childNodes;
+
+    // Add class cursor to mark the cursor on the span
+    var spanArray = this.currentTextBox().childNodes;
     for (var i=0; i<spanArray.length; i++) {
       spanArray[i].className = spanArray[i].className.replace(' cursor','');
     }
